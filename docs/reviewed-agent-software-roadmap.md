@@ -1,8 +1,23 @@
 # AI agent software roadmap, grouped by purpose
 
-158 software projects from the reviewed catalogue and follow-up reviews, grouped by their main role. Descriptions summarize documentation, discussion evidence and selected source inspection. Each project appears once; the groups overlap in practice.
+193 software projects and services from the reviewed catalogue and follow-up reviews, grouped by their main role. Descriptions summarize documentation, discussion evidence and selected source inspection. Each project appears once; the groups overlap in practice.
 
-**Statistics checked: 2026-09-20 (UTC).** Stars are GitHub stars. Issues are open issues, excluding pull requests. Last updated is the most recent repository push (`pushed_at`, any branch), shown as a UTC date. Contributors use GitHub's displayed count, with a linked API total for Every Code; bots may be included. Counts describe the linked repository, including its fork history or documentation scope.
+**Project-state reconciliation: 2026-10-02.** This is a research catalogue, not an implementation sequence or adoption list. Accepted choices come from the [Studio v1 map](../../.plan/maps/studio-v1/map.md) and [ADRs](../adr/); the [research index](README.md) owns the evidence inventory. Existing dated repository metrics below were preserved, not refreshed. New entries have unverified metrics marked **—**.
+
+## Current Studio disposition
+
+- **Planning tools in use:** Chartr is the active decision tracker; BMAD maintains the draft PRD. See [tools and skills](../tools-and-skills.md). Studio implementation still awaits the settled Spec and an implementation request.
+- **Accepted worker architecture, qualification pending:** top-Tier API-key requests pass through the Studio-owned admitting gateway; native Claude/Codex handle Spec/decomposition, while Review seats use Studio-owned API loops. First-run cheap-Tier work is local `llama-server` with OpenCode, Pi as alternate. Neither gateway nor local model eligibility follows from adoption of this architecture. [Routing ADR](../adr/0008-gateway-admitted-top-tier-and-local-cheap-tier.md), [gateway prototype](../../.plan/maps/studio-v1/tickets/27-prototype-bounded-inference-gateway.md), [local benchmark](../../.plan/maps/studio-v1/tickets/26-benchmark-cheap-tier-local-candidates.md).
+- **Coordination remains open:** Liza and Tagteam are the source-review recommendations for a bounded comparison with a minimal runner; none has been adopted. AO remains a reserve. Older landscape priorities do not expand this shortlist. [Source review](coordination-candidate-source-review.md), [comparison ticket](../../.plan/maps/studio-v1/tickets/20-compare-coordination-options-in-a-bounded-prototype.md).
+- **Messaging has two different statuses:** dedicated single-node NATS JetStream plus Telegram is accepted for Owner messaging. Reuse for worker coordination is a research recommendation awaiting the coordination decision; Kafka and `nats-jetstream-flow` are not selected. [Messaging ADR](../adr/0009-owner-messaging-over-a-dedicated-nats-bus.md), [bus comparison](studio-agents-bus-comparison.md).
+- **Delivery baseline is accepted, provisioning remains open:** remote Forgejo Testbed, Studio-owned checks/Gate/merge/deployment, Incus test execution and local Compose Staging. Data recovery and Owner rejection after Staging remain unresolved. [Delivery ADR](../adr/0003-studio-owns-testbed-gates-and-deployment.md), [recovery decision ticket](../../.plan/maps/studio-v1/tickets/29-define-staging-data-recovery-and-rejection.md).
+- **Research tools and new references:** local-mcp is the accepted research-tool host; its tool contracts remain open. TrueForge, NetHackers, Toast, LoopX, OmniRoute and the decision-model entries below are references, not new core candidates. Jev-style classification does not replace deterministic routing or the dual-vendor Gate. [Research tooling](../../.plan/maps/studio-v1/tickets/17-define-research-tooling.md).
+
+## Catalogue scope and metric dates
+
+The newer [Best of Agent Harnesses review](sources/best-of-agent-harnesses-review.md) covers a separate 167-item third-party catalogue. Its editorial ratings and uninspected entries are not automatically imported here. Likewise, archive-only discoveries stay in the [Telegram report](telegram-report.md); the additions below use its primary-checked entries. Individual coding-model releases and papers remain in their focused research reviews rather than being counted as software projects. The decision-model section includes reviewed serving/training projects and the hosted Jev reference.
+
+**Statistics checked: 2026-09-20 (UTC), except evidence-layer on 2026-09-22 and Hindsight, AIRA-dojo, Qwen-Planner-Agent, Google AX and Prime Agent on 2026-09-27, and OpenWorker on 2026-09-29.** Stars are GitHub stars. Issues are open issues, excluding pull requests. Last updated is the most recent repository push (`pushed_at`, any branch), shown as a UTC date. Contributors use GitHub's displayed count or the GitHub API total, with a linked API total for Every Code; bots may be included. Counts describe the linked repository, including its fork history or documentation scope. The evidence-layer and Qwen-Planner-Agent contributor counts were not retrievable and are left unverified. OpenWorker contributors were not verified; its stars/push date use the repository API and its issue count uses the issue-only search API.
 
 **—** means a comparable repository metric was not verified for that product. **Disabled** means GitHub issues are disabled. Archived repositories are labelled in their descriptions. GitHub links are the sources for repository statistics; website links identify product-only entries.
 
@@ -20,7 +35,7 @@ Tools that perform coding or other tasks using a model and access to tools.
 | Continue | [GitHub](https://github.com/continuedev/continue) | Coding-agent tooling with configurable models and development workflows. | 35,957 | 451 | 2026-09-19 | 472 |
 | Crush | [GitHub](https://github.com/charmbracelet/crush) | Go-based terminal coding agent from Charm. | 28,194 | 444 | 2026-09-20 | 135 |
 | Cursor CLI | [Website](https://cursor.com/cli) | Cursor's terminal and automation interface for coding tasks. | — | — | — | — |
-| Deep Agents / Deep Agents Code | [GitHub](https://github.com/langchain-ai/deepagents) | Agent harness with planning, subagents, file tools and configurable execution backends. | 29,580 | 153 | 2026-09-19 | 170 |
+| Deep Agents / Deep Agents Code | [GitHub](https://github.com/langchain-ai/deepagents) | Agent harness with planning, subagents, file tools, compaction and configurable execution backends; a virtual filesystem is not OS isolation. [Primary-check review](sources/truefoundry-open-source-agent-harness-review.md) qualifies the vendor comparison. | 29,580 | 153 | 2026-09-19 | 170 |
 | Devin | [Website](https://devin.ai) | Hosted software-engineering agent product. | — | — | — | — |
 | Every Code | [GitHub](https://github.com/just-every/code) | Codex-derived coding harness with agent delegation, browser tools and automated review. | 4,029 | 27 | 2026-09-16 | [467](https://api.github.com/repos/just-every/code/contributors?per_page=1&anon=false) |
 | Gajae-Code | [GitHub](https://github.com/Yeachan-Heo/gajae-code) | Experimental coding harness with planner, critic, executor and verifier roles. | 2,823 | 37 | 2026-09-19 | 148 |
@@ -29,17 +44,22 @@ Tools that perform coding or other tasks using a model and access to tools.
 | Goose | [GitHub](https://github.com/aaif-goose/goose) | Extensible development agent connecting models to tools and integrations. | 54,474 | 263 | 2026-09-19 | 659 |
 | Hermes Agent | [GitHub](https://github.com/NousResearch/hermes-agent) | Persistent assistant with memory, skills, delegation, schedules and messaging integrations. | 247,191 | 13,983 | 2026-09-20 | 3,316 |
 | Kimi Code CLI | [GitHub](https://github.com/MoonshotAI/kimi-cli) | Moonshot terminal coding agent with repository tools. | 11,407 | 490 | 2026-09-01 | 76 |
-| OpenCode | [GitHub](https://github.com/anomalyco/opencode) | Coding agent with terminal and automation interfaces and multiple model providers. | 208,679 | 4,427 | 2026-09-20 | 1,008 |
+| oh-my-pi | [GitHub](https://github.com/can1357/oh-my-pi) | Pi fork adding coding tools, persistent subagents and headless print/RPC interfaces. | 32,008 | 1,792 | 2026-09-20 | 613 |
+| OpenCode | [GitHub](https://github.com/anomalyco/opencode) | Coding harness with a headless HTTP/OpenAPI server and typed client SDK. First-run local worker choice, subject to gateway and benchmark qualification. [Primary checks](sources/truefoundry-open-source-agent-harness-review.md). | 208,679 | 4,427 | 2026-09-20 | 1,008 |
 | OpenFox | [GitHub](https://github.com/co-l/openfox) | Local-model-oriented coding assistant with configurable workflows and OpenAI-compatible backends. | 301 | 39 | 2026-09-19 | 27 |
-| OpenHands | [GitHub](https://github.com/OpenHands/OpenHands) | Software-development agent platform with managed execution environments and repository workflows. | 88,557 | 434 | 2026-09-19 | 579 |
+| OpenHands | [GitHub](https://github.com/OpenHands/OpenHands) | Software-agent platform/SDK with local, Docker and remote workspaces; isolation depends on the selected workspace, not every session necessarily using Docker. [Primary checks](sources/truefoundry-open-source-agent-harness-review.md). | 88,557 | 434 | 2026-09-19 | 579 |
 | OpenHuman | [GitHub](https://github.com/tinyhumansai/openhuman) | Local assistant with checkpointed agent workflows and a canvas for reviewing recurring processes. | 39,900 | 197 | 2026-09-19 | 183 |
-| Pi | [GitHub](https://github.com/earendil-works/pi) | Extensible coding CLI and toolkit for custom agent runtimes and model providers. | 107,378 | 147 | 2026-09-19 | 290 |
+| OpenWorker | [GitHub](https://github.com/andrewyng/openworker) | MIT agent application with provider-backed teams, an event-backed task board, versioned evidence, action approvals and optional OpenShell tool isolation; [pinned review](sources/openworker-source-review.md) records Studio Gate, admission and isolation limits. | 18,339 | 226 | 2026-09-28 | — |
+| Pi | [GitHub](https://github.com/earendil-works/pi) | Extensible coding CLI/runtime with SDK, RPC, compaction and session trees; extensions have full system access. Alternate local harness, not qualified worker containment. [Primary checks](sources/truefoundry-open-source-agent-harness-review.md). | 107,378 | 147 | 2026-09-19 | 290 |
 | Plandex | [GitHub](https://github.com/plandex-ai/plandex) | Coding agent for larger tasks with planning and project-context management. | 15,645 | 39 | 2025-10-03 | 23 |
+| Prime Agent | [GitHub](https://github.com/PrimeIntellect-ai/prime-agent) | Coding/research harness with persistent REPL, daemon sessions and ACP/JSON/RPC control; own provider loop and shared-privilege workers do not meet native-worker or isolation requirements. [Pinned review](sources/prime-agent-source-review.md). | 21,317 | 9 | 2026-09-27 | 218 |
 | Qwen Code | [GitHub](https://github.com/QwenLM/qwen-code) | Qwen coding agent for terminal-based development. | 27,997 | 1,173 | 2026-09-20 | 571 |
 | Roo Code | [GitHub](https://github.com/RooCodeInc/Roo-Code) | **Archived.** Editor-based coding agent with specialized working modes. | 24,301 | 550 | 2026-05-15 | 301 |
 | Sir Thaddeus | [GitHub](https://github.com/raydeStar/sir-thaddeus) | Local assistant with tools and a public evaluation suite. | 14 | 0 | 2026-09-14 | 5 |
 | Steiner | [GitHub](https://github.com/luispabon/steiner) | Go coding agent with bounded context and configurable sandboxed execution. | 7 | 27 | 2026-09-19 | 3 |
 | SWE-agent | [GitHub](https://github.com/SWE-agent/SWE-agent) | Repository issue-to-patch agent and reference implementation for software-agent evaluation. | 20,366 | 45 | 2026-09-14 | 103 |
+| Toast / toast-harness | [Source](https://github.com/mixedbread-ai/toast-harness) | Retrieval harness for document stores; Toast 1 is hosted, with no published weights found in the review. Not external web research or a v1 local coding worker. [Fit check](sources/mixedbread-toast-1-review.md). | — | — | — | — |
+| TrueForge | [Source](https://github.com/truefoundry/trueforge) | API/UI agent harness with deferred tools, compaction and sandbox-as-tool execution. Daytona dependency and benchmark accounting gaps limit Studio conclusions. [Review](sources/truefoundry-open-source-agent-harness-review.md). | — | — | — | — |
 | Windsurf / Devin Desktop | [Website](https://windsurf.com) | Coding IDE lineage now presented as Devin Desktop. | — | — | — | — |
 
 ## 2. Planning, specifications and development methods
@@ -49,6 +69,7 @@ Tools and workflow packages for turning an idea into specifications, plans and d
 | Name | Link | Description | Stars | Issues | Last updated | Contributors |
 | --- | --- | --- | ---: | ---: | --- | ---: |
 | Agent OS | [GitHub](https://github.com/buildermethods/agent-os) | Captures codebase standards and supplies relevant conventions to coding agents. | 5,430 | 0 | 2026-08-29 | 18 |
+| agents-best-practices | [Source](https://github.com/DenisSergeevitch/agents-best-practices) | README-checked harness/typed-tool/budget guidance, not enforcement code. [Telegram primary checks](telegram-report.md). | — | — | — | — |
 | BMAD Method | [GitHub](https://github.com/bmad-code-org/BMAD-METHOD) | Agent-assisted planning and development method with roles and structured project artifacts. | 53,248 | 35 | 2026-09-20 | 166 |
 | Claude Conductor | [GitHub](https://github.com/rbarcante/claude-conductor) | Development tracks with specification, plan, decision and review artifacts. | 56 | 0 | 2026-03-31 | 3 |
 | Compound Engineering | [GitHub](https://github.com/EveryInc/compound-engineering-plugin) | Development skills covering planning, implementation, review and reusable lesson capture. | 25,161 | 72 | 2026-09-20 | 109 |
@@ -60,7 +81,9 @@ Tools and workflow packages for turning an idea into specifications, plans and d
 | OpenSpec (Fission-AI) | [GitHub](https://github.com/Fission-AI/OpenSpec) | Specification workflow for proposing, applying and archiving changes in existing projects. | 69,586 | 124 | 2026-09-18 | 122 |
 | OpenSpec Template | [GitHub](https://github.com/arananet/openspec-template) | Specification template linking execution records and verification to the inputs used. | 10 | 1 | 2026-09-12 | 2 |
 | Praxis | [GitHub](https://github.com/intoinside/Praxis) | Intent/specification artifact CLI; inspected execution and drift-detection paths include simulations. | 14 | 4 | 2026-02-24 | 1 |
+| Qwen-Planner-Agent | [GitHub](https://github.com/Tongyi-MAI/Qwen-Planner-Agent) | Technical report and demonstration site for a mobile planner model plus stateful Harness; no model weights, training code or agent implementation are released in this repository. | 86 | 0 | 2026-09-26 | — |
 | REAP | [GitHub](https://github.com/c-d-cc/reap) | Slash-command development method moving through specification, implementation and verification. | 56 | 1 | 2026-09-12 | 2 |
+| repo-task-proof-loop | [Source](https://github.com/DenisSergeevitch/repo-task-proof-loop) | Spec/build/evidence/fresh-verification skill; agent-written evidence lacks an established external authority and commit binding. [README review](telegram-report.md). | — | — | — | — |
 | Spec Kit | [GitHub](https://github.com/github/spec-kit) | GitHub toolkit for carrying specifications into planning and implementation tasks. | 137,989 | 137 | 2026-09-18 | 306 |
 | Spec Kitty | [GitHub](https://github.com/spec-kitty/spec-kitty) | Specification workflow with work packages, worktrees and review/acceptance stages. | 1,636 | 801 | 2026-09-20 | 87 |
 | SpecPilot | [GitHub](https://github.com/girishr/SpecPilot) | CLI scaffolding development specifications, commands and records; validation is primarily structural. | 38 | 0 | 2026-09-13 | 4 |
@@ -80,7 +103,7 @@ Packages that coordinate coding roles, task dependencies, handoffs and review cy
 | Agent-Team | [GitHub](https://github.com/thebpandey/agent-team) | Coordinates coding agents using bounded assignments, worktrees, independent review and serialized integration. | 0 | 0 | 2026-09-16 | 2 |
 | Agentic Orchestration Control | [GitHub](https://github.com/ZypherHQ/agent-orchestration-skill) | Codex orchestration skill, CLI and local dashboard with run records and usage imports. | 71 | 1 | 2026-05-25 | 1 |
 | Apra Fleet | [GitHub](https://github.com/Apra-Labs/apra-fleet) | Agent fleet workflows with member allocation, provider routing, watchdogs and execution logs. | 92 | 42 | 2026-09-19 | 13 |
-| BAD (BMAD Autonomous Development) | [GitHub](https://github.com/stephenleo/bmad-autonomous-development) | BMAD automation skill describing story implementation, review and pull-request/CI workflows. | 107 | 0 | 2026-04-19 | 2 |
+| BAD (BMAD Autonomous Development) | [GitHub](https://github.com/stephenleo/bmad-autonomous-development) | BMAD automation skill for story/review/PR workflows; fails the Studio enforcement filter in reviewed paths. Reference only. [Pinned review](coordination-candidate-source-review.md). | 107 | 0 | 2026-04-19 | 2 |
 | bmad-loop | [GitHub](https://github.com/bmad-code-org/bmad-loop) | Development loop built around BMAD planning artifacts and coding-agent execution. | 137 | 128 | 2026-09-20 | 20 |
 | Cheasee Pi | [GitHub](https://github.com/SchneiderDaniel/cheasee-pi) | Staged development workflow on Pi, Docker and GitHub Projects. | 62 | 8 | 2026-09-19 | 4 |
 | Claude MPM | [GitHub](https://github.com/bobmatnyc/claude-mpm) | Claude Code project manager with specialist agents, skills and session management. | 153 | 0 | 2026-08-31 | 15 |
@@ -90,12 +113,13 @@ Packages that coordinate coding roles, task dependencies, handoffs and review cy
 | Codex Astra/Luna Orchestrator | [GitHub](https://github.com/donvito/codex-astra-luna-orchestrator) | Codex configuration bundle assigning models to coordinator, worker and reviewer roles. | 1,499 | 2 | 2026-09-17 | 5 |
 | codex_workflow | [GitHub](https://github.com/viettran-edgeAI/codex_workflow) | Codex workflow configuration with scoped roles, handoff documents and usage reporting. | 485 | 0 | 2026-09-19 | 2 |
 | Consort | [GitHub](https://github.com/siimvene/consort) | Claude Code workflow plugin with planning, delegated implementation and independent reviews. | 7 | 0 | 2026-09-07 | 2 |
-| Crewplane | [GitHub](https://github.com/crewplaneai/crewplane) | Markdown workflow graphs around coding CLIs, with dependencies, artifacts and bounded review loops. | 38 | 1 | 2026-09-19 | 4 |
+| Crewplane | [GitHub](https://github.com/crewplaneai/crewplane) | Markdown workflow graphs around coding CLIs; inspected paths fail the Studio enforcement filter. Reference only. [Pinned review](coordination-candidate-source-review.md). | 38 | 1 | 2026-09-19 | 4 |
 | Firstmate | [GitHub](https://github.com/kunchenguid/firstmate) | Agent instructions and scripts for a liaison coordinating workers in sessions and worktrees. | 6,754 | 532 | 2026-09-20 | 77 |
 | Harness Console | [GitHub](https://github.com/gammawolfe/harness-console) | BMAD-oriented runner with retries and evidence tracking; inspected gate does not execute tests. | 2 | 0 | 2026-06-28 | 1 |
 | Hedgehog | [GitHub](https://github.com/skyf0xx/hedgehog) | BMAD-based development workflow with a SQLite task graph, scopes and verification commands. | 40 | 26 | 2026-09-20 | 6 |
-| Liza | [GitHub](https://github.com/liza-mas/liza) | Coding workflow with task decomposition, implementer/reviewer roles and worktrees. | 394 | 16 | 2026-09-19 | 9 |
+| Liza | [GitHub](https://github.com/liza-mas/liza) | Coding workflow with implementer/reviewer roles and worktrees; recommended alongside Tagteam for the deferred bounded comparison, not adopted. [Pinned review](coordination-candidate-source-review.md). | 394 | 16 | 2026-09-19 | 9 |
 | LoopTroop | [GitHub](https://github.com/looptroop-ai/LoopTroop) | OpenCode-based planning and implementation app with small tasks and test/fix loops. | 149 | 2 | 2026-09-19 | 5 |
+| LoopX | [Source](https://github.com/huangruiteng/loopx) | File-backed objectives, claims, leases, user gates and run records around Claude/Codex; does not itself execute agents. Fencing and atomicity unverified; no shortlist addition. [README review](telegram-report.md). | — | — | — | — |
 | myclaude | [GitHub](https://github.com/stellarlinkco/myclaude) | Claude-oriented development workflow package with specialized agents and reusable methods. | 2,751 | 4 | 2026-05-04 | 15 |
 | Oh My OpenAgent | [GitHub](https://github.com/code-yeongyu/oh-my-openagent) | Agent workflow package combining role routing, delegation and model orchestration. | 69,201 | 597 | 2026-09-19 | 327 |
 | oh-my-claudecode | [GitHub](https://github.com/Yeachan-Heo/oh-my-claudecode) | Claude Code workflow package with planning, execution, verification and repair stages. | 39,260 | 2 | 2026-09-18 | 151 |
@@ -104,7 +128,7 @@ Packages that coordinate coding roles, task dependencies, handoffs and review cy
 | RoboCo | [GitHub](https://github.com/rennf93/roboco) | Experimental software-company workflow with management, implementation, QA and reviewer agents. | 172 | 0 | 2026-09-20 | 6 |
 | Ruflo | [GitHub](https://github.com/ruvnet/ruflo) | Broad agent coordination package combining delegation, memory, hooks and provider routing. | 72,872 | 679 | 2026-09-19 | 40 |
 | Stageflow | [GitHub](https://github.com/tejasghutukade/stageflow) | YAML development pipelines with dependencies, artifacts, checks, human gates and stored run state. | 11 | 0 | 2026-09-20 | 3 |
-| Tagteam | [GitHub](https://github.com/cephalopod-ai/tagteam) | Go orchestrator driving coding CLIs through supervisor, relay, solo and adversarial review loops. | 1 | 0 | 2026-09-16 | 4 |
+| Tagteam | [GitHub](https://github.com/cephalopod-ai/tagteam) | Go orchestrator driving coding CLIs through review loops; recommended alongside Liza for bounded comparison, with recovery, cancellation and accounting still to verify. [Pinned review](coordination-candidate-source-review.md). | 1 | 0 | 2026-09-16 | 4 |
 | YOLO-starter | [GitHub](https://github.com/ivasuy/YOLO-starter) | Experimental Codex workflow with role agents and file state; retry exhaustion can report success. | 1 | 0 | 2026-05-19 | 2 |
 
 ## 4. Dashboards, sessions and workspaces
@@ -113,7 +137,7 @@ Interfaces for supervising agents, switching sessions and organizing parallel wo
 
 | Name | Link | Description | Stars | Issues | Last updated | Contributors |
 | --- | --- | --- | ---: | ---: | --- | ---: |
-| Agent Orchestrator (Untrivial) | [GitHub](https://github.com/Untrivial-ai/agent-orchestrator) | Worker workspaces linking tasks, conversations, branches, pull requests and review state. | 12,194 | 379 | 2026-09-20 | 122 |
+| Agent Orchestrator (Untrivial) | [GitHub](https://github.com/Untrivial-ai/agent-orchestrator) | Workspace/daemon with native Claude/Codex drivers; headless runtime remains unverified, so retained as a reserve rather than rejected merely for its desktop UI. [Pinned review](untrivial-agent-orchestrator-source-review.md). | 12,194 | 379 | 2026-09-20 | 122 |
 | AI Maestro | [GitHub](https://github.com/23blocks-OS/ai-maestro) | Persistent-agent dashboard with messaging, memory and multi-machine coordination. | 789 | 10 | 2026-09-20 | 10 |
 | Aperant (Auto-Claude) | [GitHub](https://github.com/AndyMik90/Aperant) | Autonomous multi-session coding workspace, formerly Auto-Claude. | 14,562 | 46 | 2026-06-14 | 73 |
 | Appoly Multiagent Chat | [GitHub](https://github.com/appoly/multiagent-chat) | Electron interface coordinating local coding CLIs through terminals and message files. | 8 | 0 | 2026-09-08 | 3 |
@@ -122,6 +146,7 @@ Interfaces for supervising agents, switching sessions and organizing parallel wo
 | Castforge | [Website](https://castforge.ai) | Desktop task board coordinating coding CLIs across planning, implementation, testing and review. | — | — | — | — |
 | Claude Code Bridge (CCB) | [GitHub](https://github.com/SeemSeam/claude_codex_bridge) | Multi-provider terminal bridge with a background daemon, shared context and human takeover. | 3,511 | 69 | 2026-09-19 | 49 |
 | Claw Orchestrator | [GitHub](https://github.com/Enderfga/claw-orchestrator) | Multiple coding CLIs behind persistent sessions and API, MCP and ACP interfaces. | 578 | 0 | 2026-09-17 | 13 |
+| Codeman | [Source](https://github.com/Ark0N/Codeman) | tmux session supervision with compaction, respawn and automatic continuation; authority and per-Operation accounting fit unverified. [README review](telegram-report.md). | — | — | — | — |
 | Echorb | [Website](https://virtual-life.dev/echorb) | Desktop workspace organizing coding agents and iterative development loops. | — | — | — | — |
 | GitKraken Kepler | [Website](https://gitkraken.com/kepler) | GitKraken interface for visualizing agent work and following tasks through pull requests. | — | — | — | — |
 | golutra | [GitHub](https://github.com/golutra/golutra) | Desktop console coordinating parallel coding-agent sessions and workspaces. | 3,841 | 48 | 2026-08-06 | 1 |
@@ -149,13 +174,15 @@ Building blocks for custom agent applications, workflow execution and recovery.
 | Anima SDK | [GitHub](https://github.com/Rai220/anima_sdk) | Experimental agent runtime using short harness runs, file state and an outer restart loop. | 41 | 0 | 2026-09-08 | 2 |
 | AutoGPT | [GitHub](https://github.com/Significant-Gravitas/AutoGPT) | Platform for building and running reusable agent automations. | 187,448 | 313 | 2026-09-20 | 849 |
 | AxonFlow | [GitHub](https://github.com/getaxonflow/axonflow) | Runtime control layer for policies, workflow state, approval/resume and audit records. | 71 | 2 | 2026-09-17 | 4 |
+| AX (Google) | [GitHub](https://github.com/google/ax) | Early declarative cluster runtime for sandboxed agent commands, durable workspaces and suspend/resume; requires Kubernetes, Agent Substrate, Redis and a registry. | 12,076 | 46 | 2026-09-26 | 16 |
+| CerebrumKit | [GitHub](https://github.com/islomkhon/CerebrumKit) | Early self-hosted business-agent app with database-managed tools/skills, workflows and client chats; tool bodies run unsandboxed. | 0 | 0 | 2026-09-20 | 1 |
 | Cersei | [GitHub](https://github.com/pacifio/cersei) | Embeddable Rust agent harness with serializable workflow graphs and a visual editor. | 457 | 6 | 2026-08-06 | 13 |
 | CrewAI | [GitHub](https://github.com/crewAIInc/crewAI) | Python framework for role-based agent teams and event-driven workflows. | 58,789 | 159 | 2026-09-19 | 360 |
 | Flyte | [GitHub](https://github.com/flyteorg/flyte) | Workflow platform for Python, ML and agents; backend availability depends on the version. | 7,532 | 106 | 2026-09-18 | 349 |
 | Hatchet | [GitHub](https://github.com/hatchet-dev/hatchet) | Durable task engine with retries, scheduling, concurrency controls and worker queues. | 7,972 | 73 | 2026-09-19 | 99 |
 | Inngest | [GitHub](https://github.com/inngest/inngest) | Event-driven durable functions with retries, event waits, cancellation and flow control. | 5,853 | 55 | 2026-09-19 | 58 |
 | LangGraph | [GitHub](https://github.com/langchain-ai/langgraph) | Build stateful agent workflows with branching, persistence and human intervention. | 41,968 | 556 | 2026-09-20 | 301 |
-| n8n | [GitHub](https://github.com/n8n-io/n8n) | Visual automation for integrations, triggers, API calls and agent steps. | 205,396 | 406 | 2026-09-20 | 845 |
+| n8n | [GitHub](https://github.com/n8n-io/n8n) | Visual automation for integrations, triggers and agent steps; excluded as the Studio core under its accepted licence filter. [Coordination decision brief](../../.plan/maps/studio-v1/tickets/06-select-coordination-owner.md). | 205,396 | 406 | 2026-09-20 | 845 |
 | NimbleBrain | [GitHub](https://github.com/NimbleBrainInc/nimblebrain) | Self-hosted agent and MCP-app platform with skills, scoped workspaces and scheduled automation. | 22 | 212 | 2026-09-18 | 14 |
 | Omnigent | [GitHub](https://github.com/omnigent-ai/omnigent) | Python wrapper around agent harnesses with YAML definitions, subagents, sessions and policy hooks. | 10,106 | 517 | 2026-09-20 | 289 |
 | Pi Dynamic Workflows | [GitHub](https://github.com/QuintinShaw/pi-dynamic-workflows) | JavaScript workflows on Pi with parallel agents, structured outputs and replay journals. | 531 | 9 | 2026-09-14 | 31 |
@@ -175,15 +202,21 @@ Tools for retaining context, tracking work and exchanging information between ag
 | --- | --- | --- | ---: | ---: | --- | ---: |
 | aimee | [GitHub](https://github.com/RakuenSoftware/aimee) | Local service combining persistent knowledge, code intelligence, agent delegation and workflows. | 184 | 0 | 2026-09-19 | 3 |
 | AIPass | [GitHub](https://github.com/AIOSAI/AIPass) | CLI scaffold for agent mailboxes, memory, planning and shared-workspace collaboration. | 277 | 1 | 2026-09-20 | 6 |
+| Apache Kafka | [Source](https://kafka.apache.org/) | Share-group transport alternative investigated for worker delivery; not selected. Client, retry and single-host deployment limits documented in the [pinned bus comparison](studio-agents-bus-comparison.md). | — | — | — | — |
 | Backlog.md | [GitHub](https://github.com/MrLesk/Backlog.md) | Git-local Markdown tasks with dependencies, acceptance criteria, CLI/MCP access and boards. | 6,786 | 49 | 2026-09-18 | 61 |
 | Cabinet | [Website](https://runcabinet.com/) | Markdown/Git knowledge workspace with agent-assisted team workflows. | — | — | — | — |
 | Emergent Learning Framework (ELF) | [GitHub](https://github.com/Spacehunterz/Emergent-Learning-Framework_ELF) | **Archived.** Claude Code memory and learning framework with pattern tracking and coordination. | 208 | 2 | 2026-01-29 | 4 |
+| franz-go | [Source](https://github.com/twmb/franz-go) | Go Kafka client with share-consumer support at the reviewed pin; research alternative, not an adopted dependency. [Pinned comparison](studio-agents-bus-comparison.md). | — | — | — | — |
+| Hindsight | [GitHub](https://github.com/vectorize-io/hindsight) | Self-hosted agent-memory service with retain/recall/reflect APIs, hybrid retrieval, derived observations and coding-agent/MCP integrations. | 35,405 | 91 | 2026-09-26 | 261 |
 | links-issue-tracker (lit) | [GitHub](https://github.com/promptctl/links-issue-tracker) | Git-local issue tracker backed by Dolt SQL, designed for agent-driven updates. | 2 | Disabled | 2026-09-19 | 6 |
 | LLM Memory | [GitHub](https://github.com/jeffdafoe/llm-memory-api) | Editable agent knowledge through MCP, with shared discussion and voting features. | 13 | 0 | 2026-09-15 | 3 |
 | Memspec | [GitHub](https://github.com/siimvene/memspec) | Versioned Markdown memory with provenance, code anchors and searchable claims. | 8 | 0 | 2026-09-16 | 2 |
 | Mimir | [GitHub](https://github.com/orneryd/Mimir) | Graph-based persistent agent memory connecting architectural knowledge, tasks and code. | 286 | 5 | 2025-12-25 | 2 |
 | MUON | [GitHub](https://github.com/Sweetdevil144/muon) | Human-confirmed memory and code graphs supporting change-impact checks around coding CLIs. | 6 | 0 | 2026-09-19 | 1 |
 | MyVibe | [GitHub](https://github.com/davidMcM84/my-vibe) | SQLite-backed BMAD context store with tasks, invariants, logs and a dashboard. | 2 | 0 | 2026-08-09 | 3 |
+| NATS JetStream | [Source](https://github.com/nats-io/nats-server) | Accepted dedicated Owner-messaging bus; worker transport reuse only recommended. Acknowledgements do not fence stale execution. [Bus comparison](studio-agents-bus-comparison.md), [ADR](../adr/0009-owner-messaging-over-a-dedicated-nats-bus.md). | — | — | — | — |
+| nats-jetstream-flow | [Source](https://github.com/pnvasko/nats-jetstream-flow) | Proposed Go KV/task substrate; automatic read-modify-write retries can reapply stale writes, and lease/ack handling needs qualification. Not selected. [Pinned evidence](studio-agents-bus-comparison.md). | — | — | — | — |
+| nats.go | [Source](https://github.com/nats-io/nats.go) | Go JetStream client examined in the bus comparison; acknowledgement and delivery controls do not replace authority state. [Pinned evidence](studio-agents-bus-comparison.md). | — | — | — | — |
 | Orbit | [GitHub](https://github.com/itsamruth/orbit) | Local coding-session history, checkpoints and bounded handoffs between agent providers. | 1 | 0 | 2026-09-15 | 1 |
 | pi-agenticoding / Pi Schematic | [GitHub](https://github.com/chunkhound/pi-schematic) | Pi extension using persistent workstream notebooks and fresh contexts for delegated tasks. | 52 | 13 | 2026-09-18 | 2 |
 | Swarm Tools | [GitHub](https://github.com/joelhooks/swarm-tools) | Agent coordination tools for task storage, file reservations, messaging and checkpoints. | 740 | 30 | 2026-07-30 | 12 |
@@ -195,10 +228,13 @@ Supporting tools for evaluation, repository exploration, routing and execution e
 
 | Name | Link | Description | Stars | Issues | Last updated | Contributors |
 | --- | --- | --- | ---: | ---: | --- | ---: |
+| agent-horizon-degradation | [Source](https://github.com/shubmittal/agent-horizon-degradation) | Multi-step evaluation code and datasets; mixture, pairing and context-control caveats prevent a universal safe step limit. [Paper and pinned-code review](sources/arxiv-2609-01660-agent-degradation-review.md). | — | — | — | — |
 | Agentic Coding Flywheel Setup | [GitHub](https://github.com/Dicklesworthstone/agentic_coding_flywheel_setup) | Ubuntu environment bootstrap for coding agents, sessions and coordination tools. | 1,647 | 7 | 2026-09-19 | 3 |
+| AIRA-dojo | [GitHub](https://github.com/facebookresearch/aira-dojo) | Research-agent evaluation framework separating Tasks, Solvers, operators, search policies, execution environments and evaluators; CC BY-NC 4.0 and oriented to MLE-bench/Slurm experiments. | 173 | 2 | 2026-04-14 | 6 |
 | Bernstein | [GitHub](https://github.com/sipyourdrink-ltd/bernstein) | Framework for declarative execution rules and verifiable workflow records. | 1,209 | 262 | 2026-09-20 | 112 |
 | Claworc | [GitHub](https://github.com/gluk-w/claworc) | OpenClaw instance management with fleet supervision and credential controls. | 242 | 3 | 2026-09-18 | 11 |
 | CodeGraph | [GitHub](https://github.com/colbymchenry/codegraph) | Repository code graph for navigating relationships and supplying coding context. | 71,509 | 179 | 2026-09-16 | 59 |
+| evidence-layer | [GitHub](https://github.com/AndrewBogdanovTSS/evidence-layer) | CLI/library for command artifacts, review claims, Git receipts and governance checks. [Source review](sources/evidence-layer-source-review.md) found receipt shell execution and validation gaps; retained as a reference, with direct integration not recommended at this pin. | 1 | 0 | 2026-09-18 | — |
 | GitNébula | [GitHub](https://github.com/jundymek/gitnebula) | Offline repository maps from imports, file size, Git history and co-change. | 0 | 0 | 2026-09-10 | 2 |
 | harness-bench-fast | [GitHub](https://github.com/ai-forever/harness-bench-fast) | Benchmark project for comparing agent harness and model configurations. | 53 | 5 | 2026-09-08 | 12 |
 | Hedgehog PROSE Engineering | [GitHub](https://github.com/skyf0xx/hedgehog-core-copywriting-prose-engineering) | Copywriting workflow combining agent drafts with executable checks and revision loops. | 11 | 0 | 2026-09-19 | 2 |
@@ -207,8 +243,29 @@ Supporting tools for evaluation, repository exploration, routing and execution e
 | Mac MCP | [GitHub](https://github.com/bulutarkan/mac-mcp) | MCP tools for agent interaction with a macOS desktop. | 70 | 0 | 2026-09-18 | 2 |
 | Multi-MCP | [GitHub](https://github.com/religa/multi_mcp) | MCP server for multi-model answers, critique, analysis and code review. | 35 | 1 | 2026-09-05 | 4 |
 | Multree | [GitHub](https://github.com/gileze33/multree) | Manages coordinated Git worktrees and environment setup across multiple repositories. | 2 | 8 | 2026-09-13 | 6 |
+| NetHackers | [Source](https://github.com/dunnolab/nethackers) | Agent mutation/evaluation harness with a host credential broker; open mutator egress, missing Reservation admission and scorer-import exposure limit reuse. [Pinned review](sources/nethackers-source-review.md). | — | — | — | — |
+| no-mistakes | [Source](https://github.com/kunchenguid/no-mistakes) | Go push-gate workflow with disposable worktrees, review and checks; reviewed GitHub/single-reviewer path does not supply the Forgejo dual-vendor Gate. [README review](telegram-report.md). | — | — | — | — |
 | Octocode | [GitHub](https://github.com/Muvon/octocode) | Code exploration and search tools for agent-assisted repository understanding. | 475 | 4 | 2026-09-19 | 8 |
+| OmniRoute | [Source](https://github.com/diegosouzapw/OmniRoute) | Multi-provider gateway reference; advertised atomic RPM admission is not whole-operation spending admission. Cancellation and usage need source qualification. [README review](telegram-report.md). | — | — | — | — |
 | OrbiqD BriefKit | [GitHub](https://github.com/orbiqd/orbiqd-briefkit) | CLI/MCP adapter for invoking coding agents, continuing conversations and recording executions. | 26 | 0 | 2026-05-12 | 3 |
 | pi-vs-claude-code | [GitHub](https://github.com/disler/pi-vs-claude-code) | Collection of Pi extensions demonstrating hooks, tools and coding-agent workflow patterns. | 1,690 | 11 | 2026-07-10 | 2 |
 | Plano | [GitHub](https://github.com/katanemo/plano) | AI proxy handling model/agent routing, filters and telemetry outside application code. | 7,057 | 110 | 2026-08-19 | 45 |
 | Rill | [Website](https://userill.dev) | Browser evidence-capture tool described in discussion; product page could not be verified. | — | — | — | — |
+
+## 8. Decision models and advisory classification
+
+Reviewed serving/training projects and a hosted reference for possible future bounded judgments. None is adopted; typed output is not semantic correctness or calibrated confidence. See the [comparative review](sources/jev-alternatives-review.md) and [independent evaluation review](sources/rlcd-alignbench-review.md).
+
+| Name | Link | Description | Stars | Issues | Last updated | Contributors |
+| --- | --- | --- | ---: | ---: | --- | ---: |
+| Bespoke Nimble | [Source](https://github.com/bespokelabsai/nimble) | Typed decision model with training recipe and NVIDIA/MLX paths; checkpoint and loader defaults require pinning. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
+| FLock this-that-model | [Source](https://github.com/FLock-io/this-that-model) | Typed decision model without a decoding loop; reported task-family gains and subset denominators need preservation. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
+| Jev / TypeSafe System One | [Source](https://typesafe.ai/) | Hosted typed probabilistic decisions; neither a coding worker nor a replacement for deterministic routing or Review. [Launch review](sources/typesafe-jev-review.md). | — | — | — | — |
+| jevlike | [Source](https://github.com/vinnylarouge/jevlike) | Option-attention training starter and visual-game examples; task data required and Jev-equivalent quality disclaimed. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
+| Kev | [Source](https://github.com/jaredpalmer/kev) | Decision-model family with isolated questions and calibration tooling; workload fine-tuning is not generalization evidence. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
+| Laya | [Source](https://github.com/NandhaKishorM/laya) | Encoder decision checkpoints and language router; base-task weaknesses and overconfidence remain. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
+| NanoJev | [Source](https://github.com/TianyuCodings/NanoJev) | Small decision-head model and game checkpoints; game results do not qualify Studio classification. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
+| Rizzo Flow | [Source](https://github.com/Rizzo-AI-Academy/rizzo-flow) | Option-logit serving with decision fine-tunes; calibration depends on model file, backend and runtime. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
+| SemIf / OpenJev | [Source](https://github.com/TheoLeeCJ/SemIf-OpenJev) | Direct answer-logit scoring and shared-state reuse; optimized paths can change decisions. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
+| System One (mateolafalce) | [Source](https://github.com/mateolafalce/system-one-model) | Small ModernBERT student/teacher training recipe for short English decisions; a domain specialist, not a general Jev replica. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
+| Von | [Source](https://github.com/wfzyx/von) | Small English decision encoder with typed outputs; limited criteria-free boolean judgment. [Primary review](sources/jev-alternatives-review.md). | — | — | — | — |
