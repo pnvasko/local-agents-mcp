@@ -1,25 +1,31 @@
 # AI agent software roadmap, grouped by purpose
 
-193 software projects and services from the reviewed catalogue and follow-up reviews, grouped by their main role. Descriptions summarize documentation, discussion evidence and selected source inspection. Each project appears once; the groups overlap in practice.
+370 software projects and services from the reviewed catalogue and follow-up reviews, grouped by their main role. Descriptions summarize documentation, discussion evidence and selected source inspection. Each project appears once; the groups overlap in practice.
 
-**Project-state reconciliation: 2026-10-02.** This is a research catalogue, not an implementation sequence or adoption list. Accepted choices come from the [Studio v1 map](../../.plan/maps/studio-v1/map.md) and [ADRs](../adr/); the [research index](README.md) owns the evidence inventory. Existing dated repository metrics below were preserved, not refreshed. New entries have unverified metrics marked **—**.
-
-## Current Studio disposition
-
-- **Planning tools in use:** Chartr is the active decision tracker; BMAD maintains the draft PRD. See [tools and skills](../tools-and-skills.md). Studio implementation still awaits the settled Spec and an implementation request.
-- **Accepted worker architecture, qualification pending:** top-Tier API-key requests pass through the Studio-owned admitting gateway; native Claude/Codex handle Spec/decomposition, while Review seats use Studio-owned API loops. First-run cheap-Tier work is local `llama-server` with OpenCode, Pi as alternate. Neither gateway nor local model eligibility follows from adoption of this architecture. [Routing ADR](../adr/0008-gateway-admitted-top-tier-and-local-cheap-tier.md), [gateway prototype](../../.plan/maps/studio-v1/tickets/27-prototype-bounded-inference-gateway.md), [local benchmark](../../.plan/maps/studio-v1/tickets/26-benchmark-cheap-tier-local-candidates.md).
-- **Coordination remains open:** Liza and Tagteam are the source-review recommendations for a bounded comparison with a minimal runner; none has been adopted. AO remains a reserve. Older landscape priorities do not expand this shortlist. [Source review](coordination-candidate-source-review.md), [comparison ticket](../../.plan/maps/studio-v1/tickets/20-compare-coordination-options-in-a-bounded-prototype.md).
-- **Messaging has two different statuses:** dedicated single-node NATS JetStream plus Telegram is accepted for Owner messaging. Reuse for worker coordination is a research recommendation awaiting the coordination decision; Kafka and `nats-jetstream-flow` are not selected. [Messaging ADR](../adr/0009-owner-messaging-over-a-dedicated-nats-bus.md), [bus comparison](studio-agents-bus-comparison.md).
-- **Delivery baseline is accepted, provisioning remains open:** remote Forgejo Testbed, Studio-owned checks/Gate/merge/deployment, Incus test execution and local Compose Staging. Data recovery and Owner rejection after Staging remain unresolved. [Delivery ADR](../adr/0003-studio-owns-testbed-gates-and-deployment.md), [recovery decision ticket](../../.plan/maps/studio-v1/tickets/29-define-staging-data-recovery-and-rejection.md).
-- **Research tools and new references:** local-mcp is the accepted research-tool host; its tool contracts remain open. TrueForge, NetHackers, Toast, LoopX, OmniRoute and the decision-model entries below are references, not new core candidates. Jev-style classification does not replace deterministic routing or the dual-vendor Gate. [Research tooling](../../.plan/maps/studio-v1/tickets/17-define-research-tooling.md).
+**Catalogue expanded 2026-10-03; source-review descriptions updated 2026-10-04.** This is a research catalogue, not an implementation sequence or adoption list. Accepted choices come from the [Studio v1 map](../../.plan/maps/studio-v1/map.md) and [ADRs](../adr/); the [research index](README.md) owns the evidence inventory. Existing dated repository metrics below were preserved, not refreshed. New entries have unverified metrics marked **—**.
 
 ## Catalogue scope and metric dates
 
-The newer [Best of Agent Harnesses review](sources/best-of-agent-harnesses-review.md) covers a separate 167-item third-party catalogue. Its editorial ratings and uninspected entries are not automatically imported here. Likewise, archive-only discoveries stay in the [Telegram report](telegram-report.md); the additions below use its primary-checked entries. Individual coding-model releases and papers remain in their focused research reviews rather than being counted as software projects. The decision-model section includes reviewed serving/training projects and the hosted Jev reference.
+The [candidate ledger](roadmap-candidate-ledger.md) holds 249 records from the 167-project catalogue, its supplemental leads, the Telegram report, the Jev follow-ups and one Owner-supplied addition. All 249 have a final publication disposition, recorded in the ledger:
+
+| Disposition | Records |
+| --- | ---: |
+| Added in this expansion | 177 |
+| Already present (5 rows updated with new evidence) | 52 |
+| References, not software rows | 4 |
+| Outside scope (model weights, papers or non-software) | 9 |
+| Deferred: identity or evidence unresolved | 4 |
+| Covered through another record (group C220; aliases C230, C236) | 3 |
+
+**Evidence labels on rows added 2026-10-03.** *Screening only* means a model-generated screening (DeepSeek V4 Flash through Qwen Code) of primary documentation: identity, purpose, licence and deployment, without source inspection or runtime checks. See the [screening results](screening/README.md). *Focused review* means a pinned documentation and source review with independent review and accepted corrections; see the [focused reviews](focused-reviews-independent-review.md). Older rows keep their own linked evidence. Neither label is runtime verification, and the [screening consolidation](screening-consolidation.md) records which candidates matter for which Studio decision. Inclusion here selects nothing.
+
+**Deferred records:** C190 tg-cli, C219 OpenAI Agents API, C234 Vals-Smith, C235 Auto AI Router. Each needs a bounded identity check before any row is added; none blocks an open decision. **References:** C037 — Curated list of Claude Code resources (CC-BY-NC-ND-4.0); C168 — The Best of Agent Harnesses catalogue itself; its review is the input for this roadmap expansion; C200 — Example repository provisioning a Tailscale-joined VM on macOS; C246 — Research paper (arXiv 2606.28279) on hardware design as repository-level code evolution. **Outside scope:** C002, C167, C170, C205, C206, C207, C222, C223, C243; see their screening results.
+
+The newer [Best of Agent Harnesses review](sources/best-of-agent-harnesses-review.md) covers a separate 167-item third-party catalogue. Its editorial ratings are not imported here; its 167 projects were screened individually (see above). Likewise, archive-only discoveries stay in the [Telegram report](telegram-report.md); the additions below use its primary-checked entries. Individual coding-model releases and papers remain in their focused research reviews rather than being counted as software projects. The decision-model section includes reviewed serving/training projects and the hosted Jev reference.
 
 **Statistics checked: 2026-09-20 (UTC), except evidence-layer on 2026-09-22 and Hindsight, AIRA-dojo, Qwen-Planner-Agent, Google AX and Prime Agent on 2026-09-27, and OpenWorker on 2026-09-29.** Stars are GitHub stars. Issues are open issues, excluding pull requests. Last updated is the most recent repository push (`pushed_at`, any branch), shown as a UTC date. Contributors use GitHub's displayed count or the GitHub API total, with a linked API total for Every Code; bots may be included. Counts describe the linked repository, including its fork history or documentation scope. The evidence-layer and Qwen-Planner-Agent contributor counts were not retrievable and are left unverified. OpenWorker contributors were not verified; its stars/push date use the repository API and its issue count uses the issue-only search API.
 
-**—** means a comparable repository metric was not verified for that product. **Disabled** means GitHub issues are disabled. Archived repositories are labelled in their descriptions. GitHub links are the sources for repository statistics; website links identify product-only entries.
+**—** means a comparable repository metric was not verified for that product; rows added 2026-10-03 have no metrics collected. **Disabled** means GitHub issues are disabled. Archived repositories are labelled in their descriptions. GitHub links are the sources for repository statistics; website links identify product-only entries.
 
 ## 1. Agents and execution harnesses
 
@@ -27,37 +33,63 @@ Tools that perform coding or other tasks using a model and access to tools.
 
 | Name | Link | Description | Stars | Issues | Last updated | Contributors |
 | --- | --- | --- | ---: | ---: | --- | ---: |
+| Agent Zero | [GitHub](https://github.com/agent0ai/agent-zero) | Agent framework that gives the agent a Dockerized Linux desktop, browser, project-isolated memory and skills. *Screening only (2026-10-03).* | — | — | — | — |
 | Aider | [GitHub](https://github.com/Aider-AI/aider) | Terminal pair programming focused on editing and versioning repository changes. | 49,068 | 1,378 | 2026-05-22 | 171 |
+| AIlice | [GitHub](https://github.com/myshell-ai/AIlice) | Autonomous general-purpose agent that decomposes tasks into a dynamic call tree of sub-agents; the README targets large local models. *Screening only (2026-10-03).* | — | — | — | — |
 | Amp | [Website](https://ampcode.com) | Commercial coding-agent product; detailed capabilities were not verified in the review. | — | — | — | — |
+| Anthropic Managed Agents | [Website](https://www.anthropic.com/engineering/managed-agents) | Hosted Claude Platform service running long-horizon agents on managed infrastructure with a durable session event log. *Screening only (2026-10-03).* | — | — | — | — |
+| AnythingLLM | [GitHub](https://github.com/Mintplex-Labs/anything-llm) | Self-hostable all-in-one AI application: document chat (RAG), agents with tools, workspaces and local or cloud models. *Screening only (2026-10-03).* | — | — | — | — |
+| AutoResearchClaw | [GitHub](https://github.com/aiming-lab/AutoResearchClaw) | Multi-stage research pipeline that turns a research idea into a draft academic paper with literature search and sandboxed experiments. *Screening only (2026-10-03).* | — | — | — | — |
 | Claude Code | [GitHub](https://github.com/anthropics/claude-code) | Anthropic coding agent for terminal and repository work; linked repository includes plugins and issue tracking. | 146,760 | 11,612 | 2026-09-20 | 58 |
+| claw-code-agent | [GitHub](https://github.com/HarnessLab/claw-code-agent) | Python reimplementation of the Claude Code agent loop for local models behind an OpenAI-compatible server. No licence file was found. *Screening only (2026-10-03).* | — | — | — | — |
 | Cline | [GitHub](https://github.com/cline/cline) | Coding agent with editor, CLI and SDK interfaces. | 68,802 | 801 | 2026-09-19 | 347 |
 | Codex CLI | [GitHub](https://github.com/openai/codex) | OpenAI coding agent for terminal and repository work. | 125,338 | 17,743 | 2026-09-20 | 628 |
-| Continue | [GitHub](https://github.com/continuedev/continue) | Coding-agent tooling with configurable models and development workflows. | 35,957 | 451 | 2026-09-19 | 472 |
+| Continue | [GitHub](https://github.com/continuedev/continue) | **No longer maintained** (read-only per its README, verified 2026-10-03). Coding-agent tooling with configurable models and development workflows. | 35,957 | 451 | 2026-09-19 | 472 |
+| CowAgent | [GitHub](https://github.com/zhayujie/CowAgent) | Personal assistant and reference agent harness with task planning, tool and skill use, and long-term memory. *Screening only (2026-10-03).* | — | — | — | — |
 | Crush | [GitHub](https://github.com/charmbracelet/crush) | Go-based terminal coding agent from Charm. | 28,194 | 444 | 2026-09-20 | 135 |
 | Cursor CLI | [Website](https://cursor.com/cli) | Cursor's terminal and automation interface for coding tasks. | — | — | — | — |
 | Deep Agents / Deep Agents Code | [GitHub](https://github.com/langchain-ai/deepagents) | Agent harness with planning, subagents, file tools, compaction and configurable execution backends; a virtual filesystem is not OS isolation. [Primary-check review](sources/truefoundry-open-source-agent-harness-review.md) qualifies the vendor comparison. | 29,580 | 153 | 2026-09-19 | 170 |
+| DeepSeek Harness | [GitHub](https://github.com/deepseek-ai/deepseek-harness) | DeepSeek AI's plugin-based coding harness (`dsh`) with a local Web UI; developer preview with announced breaking changes. *Screening only (2026-10-03).* | — | — | — | — |
+| DeepSeek-Reasonix | [GitHub](https://github.com/esengine/DeepSeek-Reasonix) | Self-hosted coding agent with CLI/TUI, desktop app and ACP editor access; config-driven multi-model support with a DeepSeek preset. *Screening only (2026-10-03).* | — | — | — | — |
+| DeerFlow | [GitHub](https://github.com/bytedance/deer-flow) | ByteDance agent harness orchestrating sub-agents, memory and sandboxed execution for deep research and coding tasks. *Screening only (2026-10-03).* | — | — | — | — |
 | Devin | [Website](https://devin.ai) | Hosted software-engineering agent product. | — | — | — | — |
 | Every Code | [GitHub](https://github.com/just-every/code) | Codex-derived coding harness with agent delegation, browser tools and automated review. | 4,029 | 27 | 2026-09-16 | [467](https://api.github.com/repos/just-every/code/contributors?per_page=1&anon=false) |
+| fx | [GitHub](https://github.com/vercel-labs/fx) | Small native (Zig) model-agnostic coding-agent CLI, scriptable and embeddable, working with OpenAI-compatible endpoints including local ones. *Screening only (2026-10-03).* | — | — | — | — |
 | Gajae-Code | [GitHub](https://github.com/Yeachan-Heo/gajae-code) | Experimental coding harness with planner, critic, executor and verifier roles. | 2,823 | 37 | 2026-09-19 | 148 |
 | Gemini CLI | [GitHub](https://github.com/google-gemini/gemini-cli) | Google terminal agent for coding and tool-driven tasks. | 107,090 | 577 | 2026-09-20 | 696 |
 | GitHub Copilot CLI | [GitHub](https://github.com/github/copilot-cli) | GitHub Copilot terminal interface for agent-assisted development. | 11,185 | 2,309 | 2026-09-18 | 31 |
 | Goose | [GitHub](https://github.com/aaif-goose/goose) | Extensible development agent connecting models to tools and integrations. | 54,474 | 263 | 2026-09-19 | 659 |
+| gpt-researcher | [GitHub](https://github.com/assafelovic/gpt-researcher) | Deep-research agent producing cited reports from web search and local documents with planner and execution agents. *Screening only (2026-10-03).* | — | — | — | — |
 | Hermes Agent | [GitHub](https://github.com/NousResearch/hermes-agent) | Persistent assistant with memory, skills, delegation, schedules and messaging integrations. | 247,191 | 13,983 | 2026-09-20 | 3,316 |
+| jcode | [GitHub](https://github.com/1jehuang/jcode) | Rust terminal coding agent with headless CLI and TypeScript SDK; connects to hosted and local OpenAI-compatible endpoints. *Screening only (2026-10-03).* | — | — | — | — |
+| Khoj | [GitHub](https://github.com/khoj-ai/khoj) | Self-hostable personal AI app for chat, semantic search over documents, custom agents and research automation (AGPL-3.0). *Screening only (2026-10-03).* | — | — | — | — |
+| Kilo Code | [GitHub](https://github.com/Kilo-Org/kilocode) | Coding agent as a VS Code extension, JetBrains plugin and CLI, with many selectable models. *Screening only (2026-10-03).* | — | — | — | — |
 | Kimi Code CLI | [GitHub](https://github.com/MoonshotAI/kimi-cli) | Moonshot terminal coding agent with repository tools. | 11,407 | 490 | 2026-09-01 | 76 |
+| Local Deep Research | [GitHub](https://github.com/LearningCircuit/local-deep-research) | Self-hosted research assistant that searches web, academic and personal sources and writes cited reports; REST API and MCP server. *Screening only (2026-10-03).* | — | — | — | — |
+| MiroThinker | [GitHub](https://github.com/MiroMindAI/MiroThinker) | Deep-research agent framework with its own Qwen-based model series for long tool-augmented research tasks. *Screening only (2026-10-03).* | — | — | — | — |
+| nanobot | [GitHub](https://github.com/HKUDS/nanobot) | Lightweight self-hosted personal agent runtime in Python with WebUI, terminal and chat-app front ends. *Screening only (2026-10-03).* | — | — | — | — |
 | oh-my-pi | [GitHub](https://github.com/can1357/oh-my-pi) | Pi fork adding coding tools, persistent subagents and headless print/RPC interfaces. | 32,008 | 1,792 | 2026-09-20 | 613 |
-| OpenCode | [GitHub](https://github.com/anomalyco/opencode) | Coding harness with a headless HTTP/OpenAPI server and typed client SDK. First-run local worker choice, subject to gateway and benchmark qualification. [Primary checks](sources/truefoundry-open-source-agent-harness-review.md). | 208,679 | 4,427 | 2026-09-20 | 1,008 |
+| Open Interpreter | [GitHub](https://github.com/openinterpreter/openinterpreter) | Terminal coding agent (a Rust Codex fork per its README) aimed at low-cost and local models through OpenAI-compatible endpoints. *Screening only (2026-10-03).* | — | — | — | — |
+| openagents | [GitHub](https://github.com/OpenAgentsInc/openagents) | Agent collective whose Coder agent writes and runs code, connected over Nostr, with a Gym for measuring it. *Screening only (2026-10-03).* | — | — | — | — |
+| OpenClaw | [GitHub](https://github.com/openclaw/openclaw) | Self-hosted agent gateway and runtime bridging chat channels to agents with sessions, tools, skills and memory. *Screening only (2026-10-03).* | — | — | — | — |
+| OpenCode | [GitHub](https://github.com/anomalyco/opencode) | Coding harness with a headless HTTP/OpenAPI server, typed client SDK and JSON CLI output. Source review at v1.18.34 identifies separate title/compaction requests and default subagent delegation; headless ask-permissions are rejected unless auto mode is enabled. [Focused review](focused-review-fr-b.md); [pinned source comparison](cheap-tier-harness-comparison.md). | 208,679 | 4,427 | 2026-09-20 | 1,008 |
 | OpenFox | [GitHub](https://github.com/co-l/openfox) | Local-model-oriented coding assistant with configurable workflows and OpenAI-compatible backends. | 301 | 39 | 2026-09-19 | 27 |
 | OpenHands | [GitHub](https://github.com/OpenHands/OpenHands) | Software-agent platform/SDK with local, Docker and remote workspaces; isolation depends on the selected workspace, not every session necessarily using Docker. [Primary checks](sources/truefoundry-open-source-agent-harness-review.md). | 88,557 | 434 | 2026-09-19 | 579 |
+| OpenHarness (HKUDS) | [GitHub](https://github.com/HKUDS/OpenHarness) | Python agent harness (loop, tools, skills, memory, permissions, MCP, swarm); ohmo is a personal agent built on it. Distinct from open-harness. *Screening only (2026-10-03).* | — | — | — | — |
 | OpenHuman | [GitHub](https://github.com/tinyhumansai/openhuman) | Local assistant with checkpointed agent workflows and a canvas for reviewing recurring processes. | 39,900 | 197 | 2026-09-19 | 183 |
+| OpenJarvis | [GitHub](https://github.com/open-jarvis/OpenJarvis) | Stanford framework for local-first personal agents with a local engine abstraction and local/cloud routing. *Screening only (2026-10-03).* | — | — | — | — |
 | OpenWorker | [GitHub](https://github.com/andrewyng/openworker) | MIT agent application with provider-backed teams, an event-backed task board, versioned evidence, action approvals and optional OpenShell tool isolation; [pinned review](sources/openworker-source-review.md) records Studio Gate, admission and isolation limits. | 18,339 | 226 | 2026-09-28 | — |
-| Pi | [GitHub](https://github.com/earendil-works/pi) | Extensible coding CLI/runtime with SDK, RPC, compaction and session trees; extensions have full system access. Alternate local harness, not qualified worker containment. [Primary checks](sources/truefoundry-open-source-agent-harness-review.md). | 107,378 | 147 | 2026-09-19 | 290 |
+| Pi | [GitHub](https://github.com/earendil-works/pi) | Extensible coding CLI/runtime with SDK, RPC, JSONL output, compaction and session trees. Source review at v1.0.1 finds no built-in permission boundary; extensions have full system access, and containment requires an external sandbox. Node-based launch requires Node >=22.19.0. [Pinned source comparison](cheap-tier-harness-comparison.md); [primary checks](sources/truefoundry-open-source-agent-harness-review.md). | 107,378 | 147 | 2026-09-19 | 290 |
 | Plandex | [GitHub](https://github.com/plandex-ai/plandex) | Coding agent for larger tasks with planning and project-context management. | 15,645 | 39 | 2025-10-03 | 23 |
 | Prime Agent | [GitHub](https://github.com/PrimeIntellect-ai/prime-agent) | Coding/research harness with persistent REPL, daemon sessions and ACP/JSON/RPC control; own provider loop and shared-privilege workers do not meet native-worker or isolation requirements. [Pinned review](sources/prime-agent-source-review.md). | 21,317 | 9 | 2026-09-27 | 218 |
-| Qwen Code | [GitHub](https://github.com/QwenLM/qwen-code) | Qwen coding agent for terminal-based development. | 27,997 | 1,173 | 2026-09-20 | 571 |
+| QM | [GitHub](https://github.com/yc-software/qm) | Self-hosted multiplayer agent harness with a headless core holding sessions, memory and a Postgres-backed queue, run in the operator's cloud. *Screening only (2026-10-03).* | — | — | — | — |
+| Qwen Code | [GitHub](https://github.com/QwenLM/qwen-code) | Terminal coding agent with headless JSON output, structured results and native time/turn/tool-call limits. Source review at v0.24.7 identifies auxiliary model requests and built-in delegation; bare mode ignores settings-file tool restrictions and the core-tools allow-list, while CLI allowed/excluded-tool flags still apply. [Pinned source comparison](cheap-tier-harness-comparison.md). | 27,997 | 1,173 | 2026-09-20 | 571 |
+| RepoMaster | [GitHub](https://github.com/QuantaAlpha/RepoMaster) | Python agent that finds relevant GitHub repositories for a task, explores their code and reuses them to solve it. *Screening only (2026-10-03).* | — | — | — | — |
 | Roo Code | [GitHub](https://github.com/RooCodeInc/Roo-Code) | **Archived.** Editor-based coding agent with specialized working modes. | 24,301 | 550 | 2026-05-15 | 301 |
 | Sir Thaddeus | [GitHub](https://github.com/raydeStar/sir-thaddeus) | Local assistant with tools and a public evaluation suite. | 14 | 0 | 2026-09-14 | 5 |
 | Steiner | [GitHub](https://github.com/luispabon/steiner) | Go coding agent with bounded context and configurable sandboxed execution. | 7 | 27 | 2026-09-19 | 3 |
 | SWE-agent | [GitHub](https://github.com/SWE-agent/SWE-agent) | Repository issue-to-patch agent and reference implementation for software-agent evaluation. | 20,366 | 45 | 2026-09-14 | 103 |
+| Talon | [GitHub](https://github.com/dylanneve1/talon) | Self-hosted multi-platform agent harness for chat apps and a companion app, with pluggable model back ends. Screening reports a repository move (unverified). *Screening only (2026-10-03).* | — | — | — | — |
 | Toast / toast-harness | [Source](https://github.com/mixedbread-ai/toast-harness) | Retrieval harness for document stores; Toast 1 is hosted, with no published weights found in the review. Not external web research or a v1 local coding worker. [Fit check](sources/mixedbread-toast-1-review.md). | — | — | — | — |
 | TrueForge | [Source](https://github.com/truefoundry/trueforge) | API/UI agent harness with deferred tools, compaction and sandbox-as-tool execution. Daytona dependency and benchmark accounting gaps limit Studio conclusions. [Review](sources/truefoundry-open-source-agent-harness-review.md). | — | — | — | — |
 | Windsurf / Devin Desktop | [Website](https://windsurf.com) | Coding IDE lineage now presented as Devin Desktop. | — | — | — | — |
@@ -69,30 +101,42 @@ Tools and workflow packages for turning an idea into specifications, plans and d
 | Name | Link | Description | Stars | Issues | Last updated | Contributors |
 | --- | --- | --- | ---: | ---: | --- | ---: |
 | Agent OS | [GitHub](https://github.com/buildermethods/agent-os) | Captures codebase standards and supplies relevant conventions to coding agents. | 5,430 | 0 | 2026-08-29 | 18 |
+| agent-skills (Addy Osmani) | [GitHub](https://github.com/addyosmani/agent-skills) | Pack of SKILL.md engineering workflows (define, plan, build, verify, review, ship) installable into many coding agents. *Screening only (2026-10-03).* | — | — | — | — |
 | agents-best-practices | [Source](https://github.com/DenisSergeevitch/agents-best-practices) | README-checked harness/typed-tool/budget guidance, not enforcement code. [Telegram primary checks](telegram-report.md). | — | — | — | — |
+| agents-cli | [GitHub](https://github.com/google/agents-cli) | Google CLI and skill suite that helps a coding agent scaffold, evaluate and deploy ADK agents on Google Cloud. *Screening only (2026-10-03).* | — | — | — | — |
+| AGENTS.md | [GitHub](https://github.com/agentsmd/agents.md) | Open Markdown convention giving coding agents a predictable place for repository instructions, with nested per-project files. *Screening only (2026-10-03).* | — | — | — | — |
+| Anthropic Skills | [GitHub](https://github.com/anthropics/skills) | Anthropic's skill repository: SKILL.md folders, the Agent Skills specification and examples. Licences differ per folder. *Screening only (2026-10-03).* | — | — | — | — |
 | BMAD Method | [GitHub](https://github.com/bmad-code-org/BMAD-METHOD) | Agent-assisted planning and development method with roles and structured project artifacts. | 53,248 | 35 | 2026-09-20 | 166 |
+| Browser-BC | [GitHub](https://github.com/Einsia/Browser-BC) | Local tool that records browser interaction traces and distills them into reusable SKILL.md skills. *Screening only (2026-10-03).* | — | — | — | — |
 | Claude Conductor | [GitHub](https://github.com/rbarcante/claude-conductor) | Development tracks with specification, plan, decision and review artifacts. | 56 | 0 | 2026-03-31 | 3 |
 | Compound Engineering | [GitHub](https://github.com/EveryInc/compound-engineering-plugin) | Development skills covering planning, implementation, review and reusable lesson capture. | 25,161 | 72 | 2026-09-20 | 109 |
+| DSPy | [GitHub](https://github.com/stanfordnlp/dspy) | Framework for programming language models with typed signatures, modules and prompt optimizers. *Screening only (2026-10-03).* | — | — | — | — |
+| fable-advisor | [GitHub](https://github.com/DannyMac180/fable-advisor) | Claude Code plugin implementing an architect/executor split: Claude plans and verifies while implementation is routed to other model lanes. *Screening only (2026-10-03).* | — | — | — | — |
 | fabriqa.ai | [Website](https://fabriqa.ai/) | Desktop workspace connecting specifications, tasks, agent sessions and reviews. | — | — | — | — |
 | GSD Core | [GitHub](https://github.com/open-gsd/gsd-core) | Specification and context workflow spanning research, planning, execution, verification and shipping. | 9,629 | 118 | 2026-09-20 | 185 |
 | gstack | [GitHub](https://github.com/garrytan/gstack) | Opinionated skills for product, engineering, testing and review work. | 133,717 | 357 | 2026-09-18 | 137 |
 | Kiro | [Website](https://kiro.dev/) | Agentic IDE organized around requirements, design, tasks, hooks and steering documents. | — | — | — | — |
 | Liteagents | [GitHub](https://github.com/hamr0/liteagents) | Specialist agents and commands with session handoffs, memory and deferred-fix tracking. | 24 | 0 | 2026-09-18 | 3 |
+| Meta-Harness | [GitHub](https://github.com/stanford-iris-lab/meta-harness) | Stanford research framework for automated search over task-specific model harnesses. *Screening only (2026-10-03).* | — | — | — | — |
 | OpenSpec (Fission-AI) | [GitHub](https://github.com/Fission-AI/OpenSpec) | Specification workflow for proposing, applying and archiving changes in existing projects. | 69,586 | 124 | 2026-09-18 | 122 |
 | OpenSpec Template | [GitHub](https://github.com/arananet/openspec-template) | Specification template linking execution records and verification to the inputs used. | 10 | 1 | 2026-09-12 | 2 |
+| planning-with-files | [GitHub](https://github.com/OthmanAdi/planning-with-files) | Skill that keeps plan, findings and progress files on disk and re-injects them each turn so plans survive context loss. *Screening only (2026-10-03).* | — | — | — | — |
 | Praxis | [GitHub](https://github.com/intoinside/Praxis) | Intent/specification artifact CLI; inspected execution and drift-detection paths include simulations. | 14 | 4 | 2026-02-24 | 1 |
 | Qwen-Planner-Agent | [GitHub](https://github.com/Tongyi-MAI/Qwen-Planner-Agent) | Technical report and demonstration site for a mobile planner model plus stateful Harness; no model weights, training code or agent implementation are released in this repository. | 86 | 0 | 2026-09-26 | — |
 | REAP | [GitHub](https://github.com/c-d-cc/reap) | Slash-command development method moving through specification, implementation and verification. | 56 | 1 | 2026-09-12 | 2 |
 | repo-task-proof-loop | [Source](https://github.com/DenisSergeevitch/repo-task-proof-loop) | Spec/build/evidence/fresh-verification skill; agent-written evidence lacks an established external authority and commit binding. [README review](telegram-report.md). | — | — | — | — |
+| skillhub | [GitHub](https://github.com/iflytek/skillhub) | Self-hosted registry for publishing, versioning and installing agent skill packages, with CLI, API and web UI. *Screening only (2026-10-03).* | — | — | — | — |
 | Spec Kit | [GitHub](https://github.com/github/spec-kit) | GitHub toolkit for carrying specifications into planning and implementation tasks. | 137,989 | 137 | 2026-09-18 | 306 |
 | Spec Kitty | [GitHub](https://github.com/spec-kitty/spec-kitty) | Specification workflow with work packages, worktrees and review/acceptance stages. | 1,636 | 801 | 2026-09-20 | 87 |
 | SpecPilot | [GitHub](https://github.com/girishr/SpecPilot) | CLI scaffolding development specifications, commands and records; validation is primarily structural. | 38 | 0 | 2026-09-13 | 4 |
 | SpecPulse | [GitHub](https://github.com/specpulse/specpulse) | CLI scaffolding specifications, plans and tasks before optional model enrichment. | 394 | 2 | 2025-11-30 | 2 |
 | specs.md | [GitHub](https://github.com/fabriqaai/specs.md) | Development workflow packages ranging from lightweight planning to full lifecycle methods. | 214 | 9 | 2026-09-09 | 7 |
 | Superpowers | [GitHub](https://github.com/obra/superpowers) | Coding-agent skills for disciplined planning, implementation and review. | 288,870 | 134 | 2026-09-19 | 51 |
+| TeamAI | [GitHub](https://github.com/Tencent/teamai-cli) | Git-backed shared harness distributing skills, rules, hooks, MCP and model profiles to team agents through merge requests. *Screening only (2026-10-03).* | — | — | — | — |
 | Tessl | [Website](https://tessl.io/) | Platform for coding-agent skills, context management and evaluation. | — | — | — | — |
 | UCAI | [GitHub](https://github.com/Joncik91/ucai) | Claude Code commands, agents and hooks for specification-to-pull-request development. | 28 | 0 | 2026-08-26 | 3 |
 | VibeScaffold | [GitHub](https://github.com/benjaminshoemaker/vibecode_spec_generator) | Requirements wizard generating project briefs, specifications and agent instructions. | 78 | 0 | 2025-12-29 | 1 |
+| wshobson/agents | [GitHub](https://github.com/wshobson/agents) | Marketplace of agent, skill and command building blocks authored once in Markdown and generated for several harnesses. *Screening only (2026-10-03).* | — | — | — | — |
 
 ## 3. Coding workflow orchestration
 
@@ -104,12 +148,14 @@ Packages that coordinate coding roles, task dependencies, handoffs and review cy
 | Agentic Orchestration Control | [GitHub](https://github.com/ZypherHQ/agent-orchestration-skill) | Codex orchestration skill, CLI and local dashboard with run records and usage imports. | 71 | 1 | 2026-05-25 | 1 |
 | Apra Fleet | [GitHub](https://github.com/Apra-Labs/apra-fleet) | Agent fleet workflows with member allocation, provider routing, watchdogs and execution logs. | 92 | 42 | 2026-09-19 | 13 |
 | BAD (BMAD Autonomous Development) | [GitHub](https://github.com/stephenleo/bmad-autonomous-development) | BMAD automation skill for story/review/PR workflows; fails the Studio enforcement filter in reviewed paths. Reference only. [Pinned review](coordination-candidate-source-review.md). | 107 | 0 | 2026-04-19 | 2 |
+| Better-OpenCodeMCP | [GitHub](https://github.com/ajhcs/Better-OpenCodeMCP) | MCP server that lets an assistant delegate asynchronous, cancellable tasks to the OpenCode CLI. Non-commercial licence variant. *Screening only (2026-10-03).* | — | — | — | — |
 | bmad-loop | [GitHub](https://github.com/bmad-code-org/bmad-loop) | Development loop built around BMAD planning artifacts and coding-agent execution. | 137 | 128 | 2026-09-20 | 20 |
 | Cheasee Pi | [GitHub](https://github.com/SchneiderDaniel/cheasee-pi) | Staged development workflow on Pi, Docker and GitHub Projects. | 62 | 8 | 2026-09-19 | 4 |
 | Claude MPM | [GitHub](https://github.com/bobmatnyc/claude-mpm) | Claude Code project manager with specialist agents, skills and session management. | 153 | 0 | 2026-08-31 | 15 |
 | Claude Octopus | [GitHub](https://github.com/nyldn/claude-octopus) | Claude Code plugin coordinating research, implementation, multiple providers and independent review. | 4,090 | 0 | 2026-09-20 | 30 |
 | claude-codex | [GitHub](https://github.com/Z-M-Huang/claude-codex) | **Archived.** Claude Code plugin with sequential review and a Codex final gate. | 26 | 2 | 2026-02-22 | 1 |
 | claude-codex-gemini | [GitHub](https://github.com/Z-M-Huang/claude-codex-gemini) | Artifact-based pipeline assigning planning, execution and review to different coding CLIs. | 18 | 0 | 2026-02-06 | 1 |
+| claudexor | [GitHub](https://github.com/razzant/claudexor) | Local control plane running several vendor coding CLIs and API adapters behind one interface, with budget and quota accounting. *Screening only (2026-10-03).* | — | — | — | — |
 | Codex Astra/Luna Orchestrator | [GitHub](https://github.com/donvito/codex-astra-luna-orchestrator) | Codex configuration bundle assigning models to coordinator, worker and reviewer roles. | 1,499 | 2 | 2026-09-17 | 5 |
 | codex_workflow | [GitHub](https://github.com/viettran-edgeAI/codex_workflow) | Codex workflow configuration with scoped roles, handoff documents and usage reporting. | 485 | 0 | 2026-09-19 | 2 |
 | Consort | [GitHub](https://github.com/siimvene/consort) | Claude Code workflow plugin with planning, delegated implementation and independent reviews. | 7 | 0 | 2026-09-07 | 2 |
@@ -118,18 +164,22 @@ Packages that coordinate coding roles, task dependencies, handoffs and review cy
 | Harness Console | [GitHub](https://github.com/gammawolfe/harness-console) | BMAD-oriented runner with retries and evidence tracking; inspected gate does not execute tests. | 2 | 0 | 2026-06-28 | 1 |
 | Hedgehog | [GitHub](https://github.com/skyf0xx/hedgehog) | BMAD-based development workflow with a SQLite task graph, scopes and verification commands. | 40 | 26 | 2026-09-20 | 6 |
 | Liza | [GitHub](https://github.com/liza-mas/liza) | Coding workflow with implementer/reviewer roles and worktrees; recommended alongside Tagteam for the deferred bounded comparison, not adopted. [Pinned review](coordination-candidate-source-review.md). | 394 | 16 | 2026-09-19 | 9 |
+| loopgate_harness | [GitHub](https://github.com/rxdt/loopgate_harness) | Repo-local loop runner and git-hook quality gate wrapping the `claude` and `codex` CLIs with iteration and time caps. *Focused review: [FR-D](focused-review-fr-d.md); see its corrections.* | — | — | — | — |
 | LoopTroop | [GitHub](https://github.com/looptroop-ai/LoopTroop) | OpenCode-based planning and implementation app with small tasks and test/fix loops. | 149 | 2 | 2026-09-19 | 5 |
-| LoopX | [Source](https://github.com/huangruiteng/loopx) | File-backed objectives, claims, leases, user gates and run records around Claude/Codex; does not itself execute agents. Fencing and atomicity unverified; no shortlist addition. [README review](telegram-report.md). | — | — | — | — |
+| LoopX | [Source](https://github.com/huangruiteng/loopx) | Its README links to loopx-project/loopx (move unverified, 2026-10-03). File-backed objectives, claims, leases, user gates and run records around Claude/Codex; does not itself execute agents. Fencing and atomicity unverified; no shortlist addition. [README review](telegram-report.md). | — | — | — | — |
 | myclaude | [GitHub](https://github.com/stellarlinkco/myclaude) | Claude-oriented development workflow package with specialized agents and reusable methods. | 2,751 | 4 | 2026-05-04 | 15 |
 | Oh My OpenAgent | [GitHub](https://github.com/code-yeongyu/oh-my-openagent) | Agent workflow package combining role routing, delegation and model orchestration. | 69,201 | 597 | 2026-09-19 | 327 |
 | oh-my-claudecode | [GitHub](https://github.com/Yeachan-Heo/oh-my-claudecode) | Claude Code workflow package with planning, execution, verification and repair stages. | 39,260 | 2 | 2026-09-18 | 151 |
 | Pied Piper | [GitHub](https://github.com/sathish316/pied-piper) | Generates agent teams from configurable roles and repeatable development playbooks. | 80 | 12 | 2026-08-05 | 3 |
+| Proliferate | [GitHub](https://github.com/proliferate-ai/proliferate) | AI IDE and orchestration workspace running several native coding agents in parallel, each in its own worktree (AGPL-3.0). *Screening only (2026-10-03).* | — | — | — | — |
 | Ralph Orchestrator | [GitHub](https://github.com/mikeyobrien/ralph-orchestrator) | Coding-agent orchestration with event-driven roles and configurable test, lint and type-check gates. | 3,150 | 1 | 2026-09-10 | 42 |
 | RoboCo | [GitHub](https://github.com/rennf93/roboco) | Experimental software-company workflow with management, implementation, QA and reviewer agents. | 172 | 0 | 2026-09-20 | 6 |
 | Ruflo | [GitHub](https://github.com/ruvnet/ruflo) | Broad agent coordination package combining delegation, memory, hooks and provider routing. | 72,872 | 679 | 2026-09-19 | 40 |
 | Stageflow | [GitHub](https://github.com/tejasghutukade/stageflow) | YAML development pipelines with dependencies, artifacts, checks, human gates and stored run state. | 11 | 0 | 2026-09-20 | 3 |
+| Symphony | [GitHub](https://github.com/openai/symphony) | OpenAI service spec and experimental Elixir implementation that dispatches issue-tracker work to isolated Codex sessions. Codex-only. *Screening only (2026-10-03).* | — | — | — | — |
 | Tagteam | [GitHub](https://github.com/cephalopod-ai/tagteam) | Go orchestrator driving coding CLIs through review loops; recommended alongside Liza for bounded comparison, with recovery, cancellation and accounting still to verify. [Pinned review](coordination-candidate-source-review.md). | 1 | 0 | 2026-09-16 | 4 |
 | YOLO-starter | [GitHub](https://github.com/ivasuy/YOLO-starter) | Experimental Codex workflow with role agents and file state; retry exhaustion can report success. | 1 | 0 | 2026-05-19 | 2 |
+| YYLO | [GitHub](https://github.com/yylo-dev/yylo) | CLI orchestrator for coding agents with typed tasks, validation evidence and protected Git merge landing. *Focused review: [FR-D](focused-review-fr-d.md); see its corrections.* | — | — | — | — |
 
 ## 4. Dashboards, sessions and workspaces
 
@@ -138,25 +188,30 @@ Interfaces for supervising agents, switching sessions and organizing parallel wo
 | Name | Link | Description | Stars | Issues | Last updated | Contributors |
 | --- | --- | --- | ---: | ---: | --- | ---: |
 | Agent Orchestrator (Untrivial) | [GitHub](https://github.com/Untrivial-ai/agent-orchestrator) | Workspace/daemon with native Claude/Codex drivers; headless runtime remains unverified, so retained as a reserve rather than rejected merely for its desktop UI. [Pinned review](untrivial-agent-orchestrator-source-review.md). | 12,194 | 379 | 2026-09-20 | 122 |
+| AgentBox | [GitHub](https://github.com/madarco/agentbox) | CLI managing Docker-based sandboxes, each running a coding agent with the project and settings copied in. *Screening only (2026-10-03).* | — | — | — | — |
 | AI Maestro | [GitHub](https://github.com/23blocks-OS/ai-maestro) | Persistent-agent dashboard with messaging, memory and multi-machine coordination. | 789 | 10 | 2026-09-20 | 10 |
 | Aperant (Auto-Claude) | [GitHub](https://github.com/AndyMik90/Aperant) | Autonomous multi-session coding workspace, formerly Auto-Claude. | 14,562 | 46 | 2026-06-14 | 73 |
 | Appoly Multiagent Chat | [GitHub](https://github.com/appoly/multiagent-chat) | Electron interface coordinating local coding CLIs through terminals and message files. | 8 | 0 | 2026-09-08 | 3 |
 | Atrium | [Website](https://getatrium.dev/docs) | macOS interface supervising coding CLIs through local or remote daemons. | — | — | — | — |
 | Buzz | [GitHub](https://github.com/block/buzz) | Shared workspace for human, agent and workflow events, with coding-agent integration. | 33,703 | 1,565 | 2026-09-20 | 122 |
 | Castforge | [Website](https://castforge.ai) | Desktop task board coordinating coding CLIs across planning, implementation, testing and review. | — | — | — | — |
+| cc-haha | [GitHub](https://github.com/NanmiCoder/cc-haha) | Desktop Claude Code workspace with multi-session tabs, provider presets including local endpoints, and visual MCP management. *Screening only (2026-10-03).* | — | — | — | — |
 | Claude Code Bridge (CCB) | [GitHub](https://github.com/SeemSeam/claude_codex_bridge) | Multi-provider terminal bridge with a background daemon, shared context and human takeover. | 3,511 | 69 | 2026-09-19 | 49 |
 | Claw Orchestrator | [GitHub](https://github.com/Enderfga/claw-orchestrator) | Multiple coding CLIs behind persistent sessions and API, MCP and ACP interfaces. | 578 | 0 | 2026-09-17 | 13 |
-| Codeman | [Source](https://github.com/Ark0N/Codeman) | tmux session supervision with compaction, respawn and automatic continuation; authority and per-Operation accounting fit unverified. [README review](telegram-report.md). | — | — | — | — |
+| Codeman | [Source](https://github.com/Ark0N/Codeman) | tmux session supervision with compaction, respawn and automatic continuation; authority and per-Operation accounting fit unverified. [README review](telegram-report.md). Focused review: [FR-D](focused-review-fr-d.md), source-only F1–F5 matrix U/P/U/U/U. | — | — | — | — |
 | Echorb | [Website](https://virtual-life.dev/echorb) | Desktop workspace organizing coding agents and iterative development loops. | — | — | — | — |
+| Eigent | [GitHub](https://github.com/eigent-ai/eigent) | Desktop "cowork" app (built on CAMEL-AI) for building and scheduling multi-agent workflows. *Screening only (2026-10-03).* | — | — | — | — |
 | GitKraken Kepler | [Website](https://gitkraken.com/kepler) | GitKraken interface for visualizing agent work and following tasks through pull requests. | — | — | — | — |
 | golutra | [GitHub](https://github.com/golutra/golutra) | Desktop console coordinating parallel coding-agent sessions and workspaces. | 3,841 | 48 | 2026-08-06 | 1 |
 | Goodboy | [GitHub](https://github.com/akhayam99/goodboy) | Desktop task workspace retaining decisions and summaries across sequential agent handoffs. | 107 | 18 | 2026-09-19 | 4 |
 | intentic | [GitHub](https://github.com/intentic/intentic) | Browser workspace for user-hosted agent environments, worktrees and diff review. | 44 | 0 | 2026-09-19 | 2 |
 | Maestro | [GitHub](https://github.com/RunMaestro/Maestro) | Desktop agent cockpit with worktrees, Markdown playbooks and a standalone execution CLI. | 3,351 | 55 | 2026-09-20 | 59 |
+| OpenResearch | [GitHub](https://github.com/alphaXiv/OpenResearch) | Local-first workspace turning coding agents into research agents, with parallel sessions and an experiment tree. *Screening only (2026-10-03).* | — | — | — | — |
 | OpenSwarm | [GitHub](https://github.com/openswarm-ai/openswarm) | Agent workspace with a headless backend; reviewed execution uses the Claude SDK. | 818 | 10 | 2026-09-18 | 8 |
 | Orca | [GitHub](https://github.com/stablyai/orca) | Coding-agent console with worktrees, remote sessions, browser tools and diff annotation. | 72,738 | 3,021 | 2026-09-20 | 442 |
 | Paseo | [GitHub](https://github.com/getpaseo/paseo) | Daemon and remote interface for managing coding-agent sessions across providers. | 17,720 | 508 | 2026-09-18 | 195 |
 | Runner | [GitHub](https://github.com/yicheng47/runner) | Desktop terminal for coding-agent roles and missions; reviewed builds cover macOS and Windows. | 117 | 27 | 2026-09-20 | 2 |
+| showagent | [GitHub](https://github.com/aytzey/showagent) | Terminal tool and MCP server that finds, resumes and converts coding-agent sessions between native formats. *Screening only (2026-10-03).* | — | — | — | — |
 | Superset | [GitHub](https://github.com/superset-sh/superset) | Agent workspaces with terminals, worktrees and CLI/SDK/MCP automation interfaces. | 14,402 | 359 | 2026-09-20 | 132 |
 | Thurbox | [GitHub](https://github.com/Thurbeen/thurbox) | Terminal workspace with worktrees, remote sessions, headless control and agent mailboxes. | 72 | 7 | 2026-09-19 | 9 |
 | Traycer | [GitHub](https://github.com/traycerai/traycer) | Desktop planning boards and task workflows around existing coding agents. | 1,501 | 181 | 2026-09-19 | 16 |
@@ -170,29 +225,74 @@ Building blocks for custom agent applications, workflow execution and recovery.
 
 | Name | Link | Description | Stars | Issues | Last updated | Contributors |
 | --- | --- | --- | ---: | ---: | --- | ---: |
+| AG2 | [GitHub](https://github.com/ag2ai/ag2) | Python framework for building and coordinating multiple agents (successor community of AutoGen). *Screening only (2026-10-03).* | — | — | — | — |
+| Agent Squad | [GitHub](https://github.com/2FastLabs/agent-squad) | Framework routing each query to the most suitable specialized agent while keeping conversation context. *Screening only (2026-10-03).* | — | — | — | — |
 | AgentGPT | [GitHub](https://github.com/reworkd/AgentGPT) | **Archived.** Browser application for configuring autonomous agents. | 36,288 | 132 | 2025-04-29 | 73 |
+| AgentRL | [GitHub](https://github.com/THUDM/AgentRL) | Research framework for distributed agentic reinforcement learning. *Screening only (2026-10-03).* | — | — | — | — |
+| AgentScope Java | [GitHub](https://github.com/agentscope-ai/agentscope-java) | Java framework for distributed agents with a harness layer, memory, skills and sub-agents. *Screening only (2026-10-03).* | — | — | — | — |
+| AgentSilex | [GitHub](https://github.com/howl-anderson/agentsilex) | Minimal, hackable agent framework with handoffs, MCP client support and OpenTelemetry tracing. *Screening only (2026-10-03).* | — | — | — | — |
+| AgentStack | [GitHub](https://github.com/agentstack-ai/AgentStack) | CLI that scaffolds agent projects for several agent frameworks. *Screening only (2026-10-03).* | — | — | — | — |
+| AgentVerse | [GitHub](https://github.com/OpenBMB/AgentVerse) | Framework for deploying multiple LLM agents for task solving and simulation. *Screening only (2026-10-03).* | — | — | — | — |
+| Agno | [GitHub](https://github.com/agno-agi/agno) | Python framework and runtime for agents, teams and workflows, served through AgentOS. *Screening only (2026-10-03).* | — | — | — | — |
+| AI SDK (Vercel) | [GitHub](https://github.com/vercel/ai) | Provider-agnostic TypeScript toolkit for AI applications and agents. *Screening only (2026-10-03).* | — | — | — | — |
 | Anima SDK | [GitHub](https://github.com/Rai220/anima_sdk) | Experimental agent runtime using short harness runs, file state and an outer restart loop. | 41 | 0 | 2026-09-08 | 2 |
+| AutoGen | [GitHub](https://github.com/microsoft/autogen) | Microsoft framework for multi-agent applications with event-driven messaging. *Screening only (2026-10-03).* | — | — | — | — |
 | AutoGPT | [GitHub](https://github.com/Significant-Gravitas/AutoGPT) | Platform for building and running reusable agent automations. | 187,448 | 313 | 2026-09-20 | 849 |
-| AxonFlow | [GitHub](https://github.com/getaxonflow/axonflow) | Runtime control layer for policies, workflow state, approval/resume and audit records. | 71 | 2 | 2026-09-17 | 4 |
 | AX (Google) | [GitHub](https://github.com/google/ax) | Early declarative cluster runtime for sandboxed agent commands, durable workspaces and suspend/resume; requires Kubernetes, Agent Substrate, Redis and a registry. | 12,076 | 46 | 2026-09-26 | 16 |
+| AxonFlow | [GitHub](https://github.com/getaxonflow/axonflow) | Runtime control layer for policies, workflow state, approval/resume and audit records. | 71 | 2 | 2026-09-17 | 4 |
+| BeeAI Framework | [GitHub](https://github.com/i-am-bee/beeai-framework) | Python and TypeScript toolkit for agents and multi-agent systems, including local models via Ollama. *Screening only (2026-10-03).* | — | — | — | — |
+| Botpress | [GitHub](https://github.com/botpress/botpress) | Chatbot platform; the repository holds Botpress Cloud integrations, CLI, SDK and examples. *Screening only (2026-10-03).* | — | — | — | — |
 | CerebrumKit | [GitHub](https://github.com/islomkhon/CerebrumKit) | Early self-hosted business-agent app with database-managed tools/skills, workflows and client chats; tool bodies run unsandboxed. | 0 | 0 | 2026-09-20 | 1 |
 | Cersei | [GitHub](https://github.com/pacifio/cersei) | Embeddable Rust agent harness with serializable workflow graphs and a visual editor. | 457 | 6 | 2026-08-06 | 13 |
+| ChatDev | [GitHub](https://github.com/OpenBMB/ChatDev) | Zero-code multi-agent orchestration platform configured through YAML or a visual editor. *Screening only (2026-10-03).* | — | — | — | — |
+| Claude Agent SDK (Python) | [GitHub](https://github.com/anthropics/claude-agent-sdk-python) | Anthropic SDK for driving Claude Code programmatically, with in-process MCP tools and permission hooks. *Screening only (2026-10-03).* | — | — | — | — |
+| Cloudflare Agents | [GitHub](https://github.com/cloudflare/agents) | SDK for persistent, stateful agents on Cloudflare Workers and Durable Objects. *Screening only (2026-10-03).* | — | — | — | — |
+| Composio | [GitHub](https://github.com/ComposioHQ/composio) | SDK and hosted platform giving agents pre-authenticated toolkits for many external apps. *Screening only (2026-10-03).* | — | — | — | — |
 | CrewAI | [GitHub](https://github.com/crewAIInc/crewAI) | Python framework for role-based agent teams and event-driven workflows. | 58,789 | 159 | 2026-09-19 | 360 |
+| Dify | [GitHub](https://github.com/langgenius/dify) | LLM application platform with visual workflows, RAG, agents and model management. Source-available Dify licence, not OSI. *Screening only (2026-10-03).* | — | — | — | — |
+| elizaOS | [GitHub](https://github.com/elizaOS/eliza) | TypeScript framework and product stack for running autonomous agents with a plugin-based runtime. *Screening only (2026-10-03).* | — | — | — | — |
+| Flowise | [GitHub](https://github.com/FlowiseAI/Flowise) | Self-hosted visual builder for LLM workflows and agents. Screening reports the repository as archived (unverified). *Screening only (2026-10-03).* | — | — | — | — |
 | Flyte | [GitHub](https://github.com/flyteorg/flyte) | Workflow platform for Python, ML and agents; backend availability depends on the version. | 7,532 | 106 | 2026-09-18 | 349 |
+| Google ADK | [GitHub](https://github.com/google/adk-python) | Google's code-first Python framework for building, evaluating and deploying agents with a graph workflow runtime. *Screening only (2026-10-03).* | — | — | — | — |
 | Hatchet | [GitHub](https://github.com/hatchet-dev/hatchet) | Durable task engine with retries, scheduling, concurrency controls and worker queues. | 7,972 | 73 | 2026-09-19 | 99 |
+| Haystack | [GitHub](https://github.com/deepset-ai/haystack) | deepset's Python framework for modular LLM pipelines and agent workflows. *Screening only (2026-10-03).* | — | — | — | — |
+| Hive | [GitHub](https://github.com/aden-hive/hive) | Self-hosted multi-agent runtime in which a coordinating agent spawns parallel workers. *Screening only (2026-10-03).* | — | — | — | — |
 | Inngest | [GitHub](https://github.com/inngest/inngest) | Event-driven durable functions with retries, event waits, cancellation and flow control. | 5,853 | 55 | 2026-09-19 | 58 |
+| LangChain | [GitHub](https://github.com/langchain-ai/langchain) | Python framework with standard model, tool and retriever interfaces and a large integration library. *Screening only (2026-10-03).* | — | — | — | — |
+| Langflow | [GitHub](https://github.com/langflow-ai/langflow) | Visual low-code builder for agents and workflows that can be served as an API or MCP server. *Screening only (2026-10-03).* | — | — | — | — |
 | LangGraph | [GitHub](https://github.com/langchain-ai/langgraph) | Build stateful agent workflows with branching, persistence and human intervention. | 41,968 | 556 | 2026-09-20 | 301 |
+| langgraph-bigtool | [GitHub](https://github.com/langchain-ai/langgraph-bigtool) | LangGraph library letting agents retrieve relevant tools from large tool registries through semantic search. *Screening only (2026-10-03).* | — | — | — | — |
+| Letta | [GitHub](https://github.com/letta-ai/letta) | Stateful agent platform with long-term memory (formerly MemGPT). Screening points to the Letta Code harness; the identity mapping is unverified. *Screening only (2026-10-03).* | — | — | — | — |
+| LlamaIndex | [GitHub](https://github.com/run-llama/llama_index) | Data framework for LLM applications: ingestion, indexing, retrieval and agent workflows. *Screening only (2026-10-03).* | — | — | — | — |
+| Mastra | [GitHub](https://github.com/mastra-ai/mastra) | TypeScript framework for agents with a model router, workflow engine with suspend/resume, memory and evals. *Screening only (2026-10-03).* | — | — | — | — |
+| MetaGPT | [GitHub](https://github.com/FoundationAgents/MetaGPT) | Multi-agent framework modelling a software company with role-based agents. *Screening only (2026-10-03).* | — | — | — | — |
+| Microsoft Agent Framework | [GitHub](https://github.com/microsoft/agent-framework) | Multi-language framework for agents and graph-based multi-agent workflows with checkpointing. *Screening only (2026-10-03).* | — | — | — | — |
 | n8n | [GitHub](https://github.com/n8n-io/n8n) | Visual automation for integrations, triggers and agent steps; excluded as the Studio core under its accepted licence filter. [Coordination decision brief](../../.plan/maps/studio-v1/tickets/06-select-coordination-owner.md). | 205,396 | 406 | 2026-09-20 | 845 |
 | NimbleBrain | [GitHub](https://github.com/NimbleBrainInc/nimblebrain) | Self-hosted agent and MCP-app platform with skills, scoped workspaces and scheduled automation. | 22 | 212 | 2026-09-18 | 14 |
 | Omnigent | [GitHub](https://github.com/omnigent-ai/omnigent) | Python wrapper around agent harnesses with YAML definitions, subagents, sessions and policy hooks. | 10,106 | 517 | 2026-09-20 | 289 |
+| Open Multi-Agent | [GitHub](https://github.com/open-multi-agent/open-multi-agent) | TypeScript agent runtime with durable approvals and offline-verifiable run records. *Screening only (2026-10-03).* | — | — | — | — |
+| open-harness | [GitHub](https://github.com/MaxGfeller/open-harness) | TypeScript framework for programmatic agents on Vercel's AI SDK. Distinct from OpenHarness (HKUDS). *Screening only (2026-10-03).* | — | — | — | — |
+| OpenAI Agents SDK (JS) | [GitHub](https://github.com/openai/openai-agents-js) | TypeScript framework for multi-agent workflows with tools, guardrails, handoffs and sandbox agents. *Screening only (2026-10-03).* | — | — | — | — |
+| OpenAI Agents SDK (Python) | [GitHub](https://github.com/openai/openai-agents-python) | Provider-agnostic framework for multi-agent workflows with tools, guardrails, handoffs and sandbox agents. *Screening only (2026-10-03).* | — | — | — | — |
+| OpenManus | [GitHub](https://github.com/FoundationAgents/OpenManus) | Open framework for general-purpose agents, with an MCP tool version and an experimental multi-agent flow. *Screening only (2026-10-03).* | — | — | — | — |
 | Pi Dynamic Workflows | [GitHub](https://github.com/QuintinShaw/pi-dynamic-workflows) | JavaScript workflows on Pi with parallel agents, structured outputs and replay journals. | 531 | 9 | 2026-09-14 | 31 |
+| PraisonAI | [GitHub](https://github.com/MervinPraison/PraisonAI) | Multi-agent orchestration framework spanning single agents to agent graphs, with CLI, dashboard and SDK. *Screening only (2026-10-03).* | — | — | — | — |
+| Pydantic AI | [GitHub](https://github.com/pydantic/pydantic-ai) | Typed Python agent framework with swappable model providers and optional durable-execution integrations. *Screening only (2026-10-03).* | — | — | — | — |
+| R2R | [GitHub](https://github.com/SciPhi-AI/R2R) | Self-hostable retrieval (RAG) system exposed as a REST API, with hybrid search and knowledge graphs. *Screening only (2026-10-03).* | — | — | — | — |
+| Rasa | [GitHub](https://github.com/RasaHQ/rasa) | Framework for conversational assistants (NLU and dialogue management); currently in maintenance mode per its README. *Screening only (2026-10-03).* | — | — | — | — |
 | Sagent | [GitHub](https://github.com/rekursiv-ai/sagent) | Python agent runtime with delegation, peer messaging, sessions and model switching. | 55 | 1 | 2026-09-19 | 7 |
+| Semantic Kernel | [GitHub](https://github.com/microsoft/semantic-kernel) | Microsoft SDK for building and orchestrating agents. Screening associated it with Microsoft Agent Framework; that move is unverified. *Screening only (2026-10-03).* | — | — | — | — |
 | Shannon | [GitHub](https://github.com/Kocoro-lab/Shannon) | Multi-agent backend combining Go orchestration, Temporal workflows and Python execution. | 2,256 | 1 | 2026-09-05 | 15 |
+| Shepherd | [GitHub](https://github.com/shepherd-agents/shepherd) | Runtime for inspectable, reversible agent runs: durable traces and retained output held for review. Pre-1.0 alpha. *Screening only (2026-10-03).* | — | — | — | — |
+| smolagents | [GitHub](https://github.com/huggingface/smolagents) | Hugging Face library for code-writing and tool-calling agents in a few lines of Python. *Screening only (2026-10-03).* | — | — | — | — |
+| Strands Agents | [GitHub](https://github.com/strands-agents/harness-sdk) | In-process SDK and harness for agents in Python and TypeScript, with lifecycle limits and provider abstraction. *Screening only (2026-10-03).* | — | — | — | — |
+| SuperAgentX | [GitHub](https://github.com/superagentxai/superagentx) | Python agent framework with pipelines, human approval and audit features. *Screening only (2026-10-03).* | — | — | — | — |
 | Synapse AI | [GitHub](https://github.com/synapseorch-ai/synapse-ai) | Agent workflow graphs with per-step models, human review and checkpoint recovery. | 326 | 0 | 2026-09-01 | 5 |
 | Team | [GitHub](https://github.com/cumbof/team) | Experimental Python agent teams with local/OpenAI-compatible models and persistent memory. | 7 | 0 | 2026-06-23 | 3 |
 | Temporal | [GitHub](https://github.com/temporalio/temporal) | Durable workflow engine for retries, recovery, timers and long-running processes. | 23,180 | 576 | 2026-09-20 | 303 |
 | Twemp | [GitHub](https://github.com/whitedwarf7/Twemp) | Experimental incident-response command center with agent roles, human approval and simulated remediation. | 0 | 0 | 2026-08-25 | 1 |
 | Weft | [GitHub](https://github.com/WeaveMindAI/weft) | Experimental typed workflow language and Rust framework with persistent execution journals. | 1,971 | 4 | 2026-09-19 | 4 |
+| Youtu-Agent | [GitHub](https://github.com/TencentCloudADP/youtu-agent) | Tencent Python framework for building and evaluating agents, oriented to open-weight models. *Screening only (2026-10-03).* | — | — | — | — |
 
 ## 6. Memory, tasks and coordination
 
@@ -200,16 +300,22 @@ Tools for retaining context, tracking work and exchanging information between ag
 
 | Name | Link | Description | Stars | Issues | Last updated | Contributors |
 | --- | --- | --- | ---: | ---: | --- | ---: |
+| agentlog | [GitHub](https://github.com/RyanAlberts/agentlog) | Small Python CLI keeping a project's decision log as JSONL, with model-assisted recall. *Screening only (2026-10-03).* | — | — | — | — |
 | aimee | [GitHub](https://github.com/RakuenSoftware/aimee) | Local service combining persistent knowledge, code intelligence, agent delegation and workflows. | 184 | 0 | 2026-09-19 | 3 |
 | AIPass | [GitHub](https://github.com/AIOSAI/AIPass) | CLI scaffold for agent mailboxes, memory, planning and shared-workspace collaboration. | 277 | 1 | 2026-09-20 | 6 |
 | Apache Kafka | [Source](https://kafka.apache.org/) | Share-group transport alternative investigated for worker delivery; not selected. Client, retry and single-host deployment limits documented in the [pinned bus comparison](studio-agents-bus-comparison.md). | — | — | — | — |
 | Backlog.md | [GitHub](https://github.com/MrLesk/Backlog.md) | Git-local Markdown tasks with dependencies, acceptance criteria, CLI/MCP access and boards. | 6,786 | 49 | 2026-09-18 | 61 |
+| beads | [GitHub](https://github.com/gastownhall/beads) | Dependency-aware task tracker for coding agents on embedded Dolt, with transactional claims and leases. Repository moved to gastownhall/beads. *Focused review: [FR-E](focused-review-fr-e.md); see its corrections.* | — | — | — | — |
 | Cabinet | [Website](https://runcabinet.com/) | Markdown/Git knowledge workspace with agent-assisted team workflows. | — | — | — | — |
+| claude-mem | [GitHub](https://github.com/thedotmack/claude-mem) | Claude Code plugin capturing tool observations into SQLite and injecting relevant context into later sessions. *Screening only (2026-10-03).* | — | — | — | — |
+| cognee | [GitHub](https://github.com/topoteretes/cognee) | Memory platform turning text, code and conversations into a self-hosted knowledge graph for agents. *Screening only (2026-10-03).* | — | — | — | — |
 | Emergent Learning Framework (ELF) | [GitHub](https://github.com/Spacehunterz/Emergent-Learning-Framework_ELF) | **Archived.** Claude Code memory and learning framework with pattern tracking and coordination. | 208 | 2 | 2026-01-29 | 4 |
 | franz-go | [Source](https://github.com/twmb/franz-go) | Go Kafka client with share-consumer support at the reviewed pin; research alternative, not an adopted dependency. [Pinned comparison](studio-agents-bus-comparison.md). | — | — | — | — |
+| Graphiti | [GitHub](https://github.com/getzep/graphiti) | Zep's framework for temporal knowledge graphs used as agent memory; needs a graph database. *Screening only (2026-10-03).* | — | — | — | — |
 | Hindsight | [GitHub](https://github.com/vectorize-io/hindsight) | Self-hosted agent-memory service with retain/recall/reflect APIs, hybrid retrieval, derived observations and coding-agent/MCP integrations. | 35,405 | 91 | 2026-09-26 | 261 |
 | links-issue-tracker (lit) | [GitHub](https://github.com/promptctl/links-issue-tracker) | Git-local issue tracker backed by Dolt SQL, designed for agent-driven updates. | 2 | Disabled | 2026-09-19 | 6 |
 | LLM Memory | [GitHub](https://github.com/jeffdafoe/llm-memory-api) | Editable agent knowledge through MCP, with shared discussion and voting features. | 13 | 0 | 2026-09-15 | 3 |
+| Mem0 | [GitHub](https://github.com/mem0ai/mem0) | Memory layer storing user, session and agent facts, as a library or self-hosted server. *Screening only (2026-10-03).* | — | — | — | — |
 | Memspec | [GitHub](https://github.com/siimvene/memspec) | Versioned Markdown memory with provenance, code anchors and searchable claims. | 8 | 0 | 2026-09-16 | 2 |
 | Mimir | [GitHub](https://github.com/orneryd/Mimir) | Graph-based persistent agent memory connecting architectural knowledge, tasks and code. | 286 | 5 | 2025-12-25 | 2 |
 | MUON | [GitHub](https://github.com/Sweetdevil144/muon) | Human-confirmed memory and code graphs supporting change-impact checks around coding CLIs. | 6 | 0 | 2026-09-19 | 1 |
@@ -219,6 +325,7 @@ Tools for retaining context, tracking work and exchanging information between ag
 | nats.go | [Source](https://github.com/nats-io/nats.go) | Go JetStream client examined in the bus comparison; acknowledgement and delivery controls do not replace authority state. [Pinned evidence](studio-agents-bus-comparison.md). | — | — | — | — |
 | Orbit | [GitHub](https://github.com/itsamruth/orbit) | Local coding-session history, checkpoints and bounded handoffs between agent providers. | 1 | 0 | 2026-09-15 | 1 |
 | pi-agenticoding / Pi Schematic | [GitHub](https://github.com/chunkhound/pi-schematic) | Pi extension using persistent workstream notebooks and fresh contexts for delegated tasks. | 52 | 13 | 2026-09-18 | 2 |
+| pi-mail | [GitHub](https://github.com/tanevanwifferen/pi-mail) | Pi extension giving multiple agent processes a shared mailbox daemon with durable history and a web console. *Screening only (2026-10-03).* | — | — | — | — |
 | Swarm Tools | [GitHub](https://github.com/joelhooks/swarm-tools) | Agent coordination tools for task storage, file reservations, messaging and checkpoints. | 740 | 30 | 2026-07-30 | 12 |
 | Task Master | [GitHub](https://github.com/eyaltoledano/claude-task-master) | AI-assisted task decomposition and tracking for coding projects. | 28,085 | 163 | 2026-04-28 | 72 |
 
@@ -228,29 +335,105 @@ Supporting tools for evaluation, repository exploration, routing and execution e
 
 | Name | Link | Description | Stars | Issues | Last updated | Contributors |
 | --- | --- | --- | ---: | ---: | --- | ---: |
+| AgencyBench | [GitHub](https://github.com/GAIR-NLP/AgencyBench) | Benchmark of long-horizon agent scenarios with rubric-based scoring. *Screening only (2026-10-03).* | — | — | — | — |
+| Agent Governance Toolkit | [GitHub](https://github.com/microsoft/agent-governance-toolkit) | Microsoft toolkit intercepting agent tool calls for policy, identity and sandbox enforcement. Public preview. *Screening only (2026-10-03).* | — | — | — | — |
+| Agent Lightning | [GitHub](https://github.com/microsoft/agent-lightning) | Microsoft Research framework for training agents with reinforcement learning against their existing harness. *Screening only (2026-10-03).* | — | — | — | — |
+| Agent Sandbox | [GitHub](https://github.com/kubernetes-sigs/agent-sandbox) | Kubernetes SIG Apps controller and CRD for isolated, stateful agent sandbox pods. *Screening only (2026-10-03).* | — | — | — | — |
+| Agent Vault | [GitHub](https://github.com/Infisical/agent-vault) | Infisical credential proxy that injects real API credentials outbound so agents never hold them. Preview. *Screening only (2026-10-03).* | — | — | — | — |
 | agent-horizon-degradation | [Source](https://github.com/shubmittal/agent-horizon-degradation) | Multi-step evaluation code and datasets; mixture, pairing and context-control caveats prevent a universal safe step limit. [Paper and pinned-code review](sources/arxiv-2609-01660-agent-degradation-review.md). | — | — | — | — |
+| agent-qa | [GitHub](https://github.com/vostride/agent-qa) | Agentic QA harness writing and running natural-language end-to-end tests. FSL licence (source-available). *Screening only (2026-10-03).* | — | — | — | — |
+| agent-security-harness | [GitHub](https://github.com/msaleme/red-team-blue-team-agent-fabric) | CLI security test harness sending adversarial traffic at live agent endpoints (MCP, A2A). *Screening only (2026-10-03).* | — | — | — | — |
+| AgentBench | [GitHub](https://github.com/THUDM/AgentBench) | Benchmark and harness evaluating LLMs as agents across eight interactive environments. *Screening only (2026-10-03).* | — | — | — | — |
 | Agentic Coding Flywheel Setup | [GitHub](https://github.com/Dicklesworthstone/agentic_coding_flywheel_setup) | Ubuntu environment bootstrap for coding agents, sessions and coordination tools. | 1,647 | 7 | 2026-09-19 | 3 |
 | AIRA-dojo | [GitHub](https://github.com/facebookresearch/aira-dojo) | Research-agent evaluation framework separating Tasks, Solvers, operators, search policies, execution environments and evaluators; CC BY-NC 4.0 and oriented to MLE-bench/Slurm experiments. | 173 | 2 | 2026-04-14 | 6 |
-| Bernstein | [GitHub](https://github.com/sipyourdrink-ltd/bernstein) | Framework for declarative execution rules and verifiable workflow records. | 1,209 | 262 | 2026-09-20 | 112 |
+| ARC-AGI benchmarking | [GitHub](https://github.com/arcprize/arc-agi-benchmarking) | ARC Prize harness running ARC-AGI tasks against several provider adapters. *Screening only (2026-10-03).* | — | — | — | — |
+| ARC-AGI-2 | [GitHub](https://github.com/arcprize/ARC-AGI-2) | Official ARC-AGI-2 task dataset for abstract-reasoning evaluation. *Screening only (2026-10-03).* | — | — | — | — |
+| Arize Phoenix | [GitHub](https://github.com/Arize-ai/phoenix) | AI observability platform with OpenTelemetry tracing and evaluations. Elastic License 2.0 (source-available). *Screening only (2026-10-03).* | — | — | — | — |
+| AutoHarness | [GitHub](https://github.com/aiming-lab/AutoHarness) | Python governance layer wrapping model SDK clients so tool calls pass permission, budget and audit checks. *Screening only (2026-10-03).* | — | — | — | — |
+| axor-core | [GitHub](https://github.com/Bucha11/axor-core) | Python governance kernel placing a policy layer between agent intent and tool execution. *Screening only (2026-10-03).* | — | — | — | — |
+| Bernstein | [GitHub](https://github.com/sipyourdrink-ltd/bernstein) | Framework for declarative execution rules and verifiable workflow records. Focused review: [FR-D](focused-review-fr-d.md), source-only F1–F5 matrix U/P/U/P/U; restart durability unproven. | 1,209 | 262 | 2026-09-20 | 112 |
+| Beyla | [GitHub](https://github.com/grafana/beyla) | Grafana eBPF auto-instrumentation producing OpenTelemetry traces and RED metrics without code changes. *Screening only (2026-10-03).* | — | — | — | — |
+| Browser Use | [GitHub](https://github.com/browser-use/browser-use) | Browser agent library and CLI that lets a model drive a real browser. *Screening only (2026-10-03).* | — | — | — | — |
+| Chrome DevTools MCP | [GitHub](https://github.com/ChromeDevTools/chrome-devtools-mcp) | MCP server letting an agent control and inspect a live Chrome browser through the DevTools protocol. *Screening only (2026-10-03).* | — | — | — | — |
+| ClawBench | [GitHub](https://github.com/TIGER-AI-Lab/ClawBench) | Benchmark of browser agents on everyday tasks across live websites. *Screening only (2026-10-03).* | — | — | — | — |
 | Claworc | [GitHub](https://github.com/gluk-w/claworc) | OpenClaw instance management with fleet supervision and credential controls. | 242 | 3 | 2026-09-18 | 11 |
+| cocoindex-code | [GitHub](https://github.com/cocoindex-io/cocoindex-code) | AST-based semantic code search usable as a CLI, MCP server or agent skill. *Screening only (2026-10-03).* | — | — | — | — |
 | CodeGraph | [GitHub](https://github.com/colbymchenry/codegraph) | Repository code graph for navigating relationships and supplying coding context. | 71,509 | 179 | 2026-09-16 | 59 |
+| context-mode | [GitHub](https://github.com/mksglu/context-mode) | MCP server keeping raw tool output out of the context window and tracking session state in SQLite. Elastic License 2.0. *Screening only (2026-10-03).* | — | — | — | — |
+| Context7 | [GitHub](https://github.com/upstash/context7) | Hosted documentation-retrieval service for coding agents, with an open-source MCP client. *Screening only (2026-10-03).* | — | — | — | — |
+| ContextForge | [GitHub](https://github.com/IBM/mcp-context-forge) | IBM MCP registry and gateway federating MCP servers and APIs behind one governed endpoint. *Screening only (2026-10-03).* | — | — | — | — |
+| CubeSandbox | [GitHub](https://github.com/TencentCloud/CubeSandbox) | Tencent Cloud KVM microVM sandbox service with an E2B-compatible API. *Screening only (2026-10-03).* | — | — | — | — |
+| Daytona | [GitHub](https://github.com/daytonaio/daytona) | Sandbox infrastructure for AI-generated code. The public repository is no longer maintained; development moved private in June 2026 (verified 2026-10-03). *Screening only (2026-10-03).* | — | — | — | — |
+| Docker MCP Gateway | [GitHub](https://github.com/docker/mcp-gateway) | Docker CLI plugin running MCP servers in isolated containers behind one gateway. *Screening only (2026-10-03).* | — | — | — | — |
+| E2B | [GitHub](https://github.com/e2b-dev/E2B) | Firecracker microVM sandboxes for AI-generated code; self-hosting needs a multi-service stack. *Screening only (2026-10-03).* | — | — | — | — |
+| EvalScope | [GitHub](https://github.com/modelscope/evalscope) | ModelScope evaluation framework for model benchmarks, agent loops and inference performance. *Screening only (2026-10-03).* | — | — | — | — |
 | evidence-layer | [GitHub](https://github.com/AndrewBogdanovTSS/evidence-layer) | CLI/library for command artifacts, review claims, Git receipts and governance checks. [Source review](sources/evidence-layer-source-review.md) found receipt shell execution and validation gaps; retained as a reference, with direct integration not recommended at this pin. | 1 | 0 | 2026-09-18 | — |
+| Exa Agent API | [Website](https://docs.exa.ai/reference/agent-api) | Hosted asynchronous API for agentic web research returning structured results. *Screening only (2026-10-03).* | — | — | — | — |
+| Free Claude Code | [GitHub](https://github.com/Alishahryar1/free-claude-code) | Local proxy re-pointing coding agents at other providers and local models (AGPL-3.0); terms-of-service risk noted in screening. *Screening only (2026-10-03).* | — | — | — | — |
+| GitHub MCP Server | [GitHub](https://github.com/github/github-mcp-server) | Official MCP server exposing GitHub repositories, issues, pull requests and Actions to agents. *Screening only (2026-10-03).* | — | — | — | — |
 | GitNébula | [GitHub](https://github.com/jundymek/gitnebula) | Offline repository maps from imports, file size, Git history and co-change. | 0 | 0 | 2026-09-10 | 2 |
+| Grafana | [GitHub](https://github.com/grafana/grafana) | Dashboards, exploration and alerting over metrics, logs and traces (AGPL-3.0). *Screening only (2026-10-03).* | — | — | — | — |
+| Grafana Alloy | [GitHub](https://github.com/grafana/alloy) | OpenTelemetry Collector distribution with Prometheus pipelines. *Screening only (2026-10-03).* | — | — | — | — |
+| Grafana Loki | [GitHub](https://github.com/grafana/loki) | Log aggregation system indexing labels rather than full text (AGPL-3.0). *Screening only (2026-10-03).* | — | — | — | — |
+| Grafana Tempo | [GitHub](https://github.com/grafana/tempo) | Distributed tracing back end with TraceQL queries (AGPL-3.0). *Screening only (2026-10-03).* | — | — | — | — |
 | harness-bench-fast | [GitHub](https://github.com/ai-forever/harness-bench-fast) | Benchmark project for comparing agent harness and model configurations. | 53 | 5 | 2026-09-08 | 12 |
+| Headroom | [GitHub](https://github.com/headroomlabs-ai/headroom) | Context-compression library and local proxy that shrinks tool output and history before it reaches the model. *Screening only (2026-10-03).* | — | — | — | — |
 | Hedgehog PROSE Engineering | [GitHub](https://github.com/skyf0xx/hedgehog-core-copywriting-prose-engineering) | Copywriting workflow combining agent drafts with executable checks and revision loops. | 11 | 0 | 2026-09-19 | 2 |
 | i-have-audhd | [GitHub](https://github.com/H-Freax/i-have-audhd) | Portable review skill separating verified outcomes from assumptions and untested claims. | 0 | 0 | 2026-09-14 | 1 |
+| Inspect | [GitHub](https://github.com/UKGovernmentBEIS/inspect_ai) | UK AI Security Institute framework for LLM evaluations: tasks, solvers, scorers, sandboxed agent evals and logs. *Focused review: [FR-F](focused-review-fr-f.md); see its corrections.* | — | — | — | — |
+| Inspect Evals | [GitHub](https://github.com/UKGovernmentBEIS/inspect_evals) | Library of standardized evaluations built on Inspect. *Screening only (2026-10-03).* | — | — | — | — |
+| Keenable | [Website](https://keenable.ai) | Hosted web search and page-fetch API for agents, available as remote MCP, REST or CLI. No self-hostable core. *Screening only (2026-10-03).* | — | — | — | — |
+| Langfuse | [GitHub](https://github.com/langfuse/langfuse) | Open-source LLM and agent observability and evaluation platform with tracing, cost tracking and prompt management. *Screening only (2026-10-03).* | — | — | — | — |
+| letta-evals | [GitHub](https://github.com/letta-ai/letta-evals) | Evaluation framework for Letta agents with datasets, graders and per-model results. *Screening only (2026-10-03).* | — | — | — | — |
+| LiteLLM | [GitHub](https://github.com/BerriAI/litellm) | AI gateway and SDK with one OpenAI-format interface to many providers, plus spend tracking. Code under `enterprise/` has a separate licence. *Focused review: [FR-A](focused-review-fr-a.md); see its corrections.* | — | — | — | — |
+| LLM-as-a-Verifier | [GitHub](https://github.com/llm-as-a-verifier/llm-as-a-verifier) | Python framework producing fine-grained verification scores from model score-token probabilities. *Screening only (2026-10-03).* | — | — | — | — |
+| llmfit | [GitHub](https://github.com/AlexsJones/llmfit) | Terminal tool estimating which local models fit the host's hardware and how fast they may run. *Screening only (2026-10-03).* | — | — | — | — |
 | local-benchmark-runner-public | [GitHub](https://github.com/raydeStar/local-benchmark-runner-public) | Local-model evaluation runner with public task banks and campaign artifacts. | 0 | 0 | 2026-07-25 | 1 |
 | Mac MCP | [GitHub](https://github.com/bulutarkan/mac-mcp) | MCP tools for agent interaction with a macOS desktop. | 70 | 0 | 2026-09-18 | 2 |
+| MCP Inspector | [GitHub](https://github.com/modelcontextprotocol/inspector) | Developer tool for testing and debugging MCP servers through a web UI and CLI. *Screening only (2026-10-03).* | — | — | — | — |
+| MCP Python SDK | [GitHub](https://github.com/modelcontextprotocol/python-sdk) | Official Python SDK for building MCP servers and clients. *Screening only (2026-10-03).* | — | — | — | — |
+| MCP reference servers | [GitHub](https://github.com/modelcontextprotocol/servers) | Official reference MCP servers (Fetch, Filesystem, Git, Memory and others); described as educational, not production-ready. *Screening only (2026-10-03).* | — | — | — | — |
+| MCP Registry | [GitHub](https://github.com/modelcontextprotocol/registry) | Official registry service listing MCP servers for clients. *Screening only (2026-10-03).* | — | — | — | — |
+| MCP TypeScript SDK | [GitHub](https://github.com/modelcontextprotocol/typescript-sdk) | Official TypeScript SDK for building MCP servers and clients. *Screening only (2026-10-03).* | — | — | — | — |
+| MCP-Zero | [GitHub](https://github.com/xfey/MCP-Zero) | Research framework (paper companion) in which the model requests MCP tools on demand. *Screening only (2026-10-03).* | — | — | — | — |
+| microsandbox | [GitHub](https://github.com/superradcompany/microsandbox) | Local microVM runtime for untrusted workloads, with per-sandbox network policy; needs KVM on Linux. Beta. *Focused review: [FR-C](focused-review-fr-c.md); see its corrections.* | — | — | — | — |
+| MLflow | [GitHub](https://github.com/mlflow/mlflow) | ML and AI engineering platform with tracing, evaluation, an AI gateway and model registry. *Screening only (2026-10-03).* | — | — | — | — |
 | Multi-MCP | [GitHub](https://github.com/religa/multi_mcp) | MCP server for multi-model answers, critique, analysis and code review. | 35 | 1 | 2026-09-05 | 4 |
 | Multree | [GitHub](https://github.com/gileze33/multree) | Manages coordinated Git worktrees and environment setup across multiple repositories. | 2 | 8 | 2026-09-13 | 6 |
 | NetHackers | [Source](https://github.com/dunnolab/nethackers) | Agent mutation/evaluation harness with a host credential broker; open mutator egress, missing Reservation admission and scorer-import exposure limit reuse. [Pinned review](sources/nethackers-source-review.md). | — | — | — | — |
+| nitpicker | [GitHub](https://github.com/arsenyinfo/nitpicker) | Rust CLI for multi-model adversarial code review with evidence-based validation of findings. *Screening only (2026-10-03).* | — | — | — | — |
 | no-mistakes | [Source](https://github.com/kunchenguid/no-mistakes) | Go push-gate workflow with disposable worktrees, review and checks; reviewed GitHub/single-reviewer path does not supply the Forgejo dual-vendor Gate. [README review](telegram-report.md). | — | — | — | — |
 | Octocode | [GitHub](https://github.com/Muvon/octocode) | Code exploration and search tools for agent-assisted repository understanding. | 475 | 4 | 2026-09-19 | 8 |
 | OmniRoute | [Source](https://github.com/diegosouzapw/OmniRoute) | Multi-provider gateway reference; advertised atomic RPM admission is not whole-operation spending admission. Cancellation and usage need source qualification. [README review](telegram-report.md). | — | — | — | — |
+| OpenComputer | [GitHub](https://github.com/diggerhq/opencomputer) | Cloud-managed runtime for building and running agents defined as code. *Screening only (2026-10-03).* | — | — | — | — |
+| OpenTelemetry | [Website](https://opentelemetry.io/) | Vendor-neutral APIs, SDKs and Collector for traces, metrics and logs. *Screening only (2026-10-03).* | — | — | — | — |
+| Opik | [GitHub](https://github.com/comet-ml/opik) | Comet's LLM observability and evaluation platform, self-hostable with Docker Compose. *Screening only (2026-10-03).* | — | — | — | — |
 | OrbiqD BriefKit | [GitHub](https://github.com/orbiqd/orbiqd-briefkit) | CLI/MCP adapter for invoking coding agents, continuing conversations and recording executions. | 26 | 0 | 2026-05-12 | 3 |
+| OrcaReplay | [GitHub](https://github.com/Continuum-AI-Corp/OrcaReplay) | CLI recording a coding agent's run at the process boundary and replaying it offline. *Screening only (2026-10-03).* | — | — | — | — |
 | pi-vs-claude-code | [GitHub](https://github.com/disler/pi-vs-claude-code) | Collection of Pi extensions demonstrating hooks, tools and coding-agent workflow patterns. | 1,690 | 11 | 2026-07-10 | 2 |
 | Plano | [GitHub](https://github.com/katanemo/plano) | AI proxy handling model/agent routing, filters and telemetry outside application code. | 7,057 | 110 | 2026-08-19 | 45 |
+| Playwright MCP | [GitHub](https://github.com/microsoft/playwright-mcp) | Microsoft MCP server exposing Playwright browser automation as tools. *Screening only (2026-10-03).* | — | — | — | — |
+| pmstack | [GitHub](https://github.com/RyanAlberts/pmstack) | Toolkit for reading agent traces, naming failure modes and turning them into code checks and judges. *Screening only (2026-10-03).* | — | — | — | — |
+| Prometheus | [GitHub](https://github.com/prometheus/prometheus) | Metrics collection, storage, querying and alerting. *Screening only (2026-10-03).* | — | — | — | — |
+| puppeteer-real-browser-mcp | [GitHub](https://github.com/withLinda/puppeteer-real-browser-mcp-server) | Local MCP server driving a real Chrome browser for an assistant. *Screening only (2026-10-03).* | — | — | — | — |
 | Rill | [Website](https://userill.dev) | Browser evidence-capture tool described in discussion; product page could not be verified. | — | — | — | — |
+| Stagehand | [GitHub](https://github.com/browserbase/stagehand) | Browserbase SDK for AI browser agents with act, observe and extract primitives. *Screening only (2026-10-03).* | — | — | — | — |
+| Steel | [GitHub](https://github.com/steel-dev/steel-browser) | Browser API for agents managing Chrome sessions behind a REST API. *Screening only (2026-10-03).* | — | — | — | — |
+| SUPER | [GitHub](https://github.com/allenai/super-benchmark) | Benchmark of agents setting up and running tasks from research repositories. *Screening only (2026-10-03).* | — | — | — | — |
+| SWE-bench | [GitHub](https://github.com/SWE-bench/SWE-bench) | Benchmark of real GitHub issues for coding agents, with a containerized evaluation harness. *Screening only (2026-10-03).* | — | — | — | — |
+| SWE-Gym | [GitHub](https://github.com/SWE-Gym/SWE-Gym) | Environment of real Python task instances for training coding agents and verifiers. *Screening only (2026-10-03).* | — | — | — | — |
+| SWE-smith | [GitHub](https://github.com/SWE-bench/SWE-smith) | Toolkit turning repositories into training environments and task instances for coding agents. *Screening only (2026-10-03).* | — | — | — | — |
+| Terminal-Bench | [GitHub](https://github.com/harbor-framework/terminal-bench) | Benchmark of terminal tasks for agents, run through the Harbor framework. *Screening only (2026-10-03).* | — | — | — | — |
+| tigor-ai 0-bench | [GitHub](https://github.com/enovikov11/tigor/tree/main/ai/0-bench) | Practitioner benchmark running OpenCode against a local LLM in an air-gapped Docker sandbox. *Screening only (2026-10-03).* | — | — | — | — |
+| ToolGen | [GitHub](https://github.com/Reason-Wang/ToolGen) | Research code for representing tools as model tokens (arXiv 2410.03439). No licence was found. *Screening only (2026-10-03).* | — | — | — | — |
+| ToolRAG | [GitHub](https://github.com/antl3x/ToolRAG) | TypeScript library retrieving only the MCP tool definitions relevant to each query from a vector store. *Screening only (2026-10-03).* | — | — | — | — |
+| Tracehouse | [Website](https://tracehouse.ai) | Hosted observability service recording Claude Code and Codex runs; only the client SDK is open. *Screening only (2026-10-03).* | — | — | — | — |
+| TRAIL | [GitHub](https://github.com/patronus-ai/trail-benchmark) | Dataset of annotated agent execution traces for error localization. *Screening only (2026-10-03).* | — | — | — | — |
+| VitaBench | [GitHub](https://github.com/meituan-longcat/vitabench) | Benchmark of multi-turn agent tasks in simulated consumer applications. *Screening only (2026-10-03).* | — | — | — | — |
+| WebArena | [GitHub](https://github.com/web-arena-x/webarena) | Self-hostable web environments and benchmark for autonomous web agents. *Screening only (2026-10-03).* | — | — | — | — |
+| webctl | [GitHub](https://github.com/dorkitude/webctl) | Go CLI running agent web searches across providers; relevance scoring depends on the hosted Jev service. *Screening only (2026-10-03).* | — | — | — | — |
+| WebVoyager | [GitHub](https://github.com/MinorJerry/WebVoyager) | Research benchmark and code for multimodal web agents on live websites. *Screening only (2026-10-03).* | — | — | — | — |
+| Weights & Biases | [GitHub](https://github.com/wandb/wandb) | Experiment tracking and MLOps platform, with Weave for LLM tracing. *Screening only (2026-10-03).* | — | — | — | — |
 
 ## 8. Decision models and advisory classification
 
